@@ -3,4 +3,6 @@
 
 当前版本：1.0.0.0 Release。
 
+下载地址：http://update.zhangbudademao.com/112/AutoLiveRecorder.exe
+
 代码中FLV前缀的类均为FLV文件处理，但这个版本没有用到。原因是扒流得到的flv文件最后一个Tag不完整无法自动合并。
