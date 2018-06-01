@@ -27,6 +27,11 @@ namespace AutoLiveRecorder
         private RoomInfo Info;
 
         /// <summary>
+        /// 监视进程实例
+        /// </summary>
+        private System.Threading.Thread Monitor;
+
+        /// <summary>
         /// 录制进程实例
         /// </summary>
         private System.Threading.Thread Recorder;
@@ -112,6 +117,31 @@ namespace AutoLiveRecorder
         #region Public 方法
 
         /// <summary>
+        /// 取消录制预位
+        /// </summary>
+        public void CancelRecordReady()
+        {
+            Monitor.Abort();
+        }
+
+        /// <summary>
+        /// 录制预位
+        /// </summary>
+        public void ReadyToRecord(string savepath)
+        {
+            Monitor = new System.Threading.Thread(() =>
+            {
+                while (true)
+                {
+                    if (IsLive()&& !IsRecording) StartRecord(savepath);
+                    System.Threading.Thread.Sleep(1000);
+                }
+            }
+            );
+            Monitor.Start();
+        }
+
+        /// <summary>
         /// 开始录制
         /// </summary>
         /// <param name="savepath">录制文件路径</param>
@@ -159,12 +189,12 @@ namespace AutoLiveRecorder
                             writer.Write(mbyte, 0, readL);//写文件
                             readL = stream.Read(mbyte, 0, 1024);//读流
                         }
-                        if (IsLive()) StartRecord(savepath); else IsRecording = false; ArrangeFile(savepath);
+                        if (IsLive()) StartRecord(savepath); else IsRecording = false;// ArrangeFile(savepath);
                     }
                     catch (Exception ex)
                     {
                         if (ex.InnerException.Message != "正在中止线程。")
-                            if (IsLive()) StartRecord(savepath); else IsRecording = false; ArrangeFile(savepath);
+                            if (IsLive()) StartRecord(savepath); else IsRecording = false;// ArrangeFile(savepath);
                     }
                     finally
                     {
@@ -172,6 +202,8 @@ namespace AutoLiveRecorder
                         stream.Close();
                         //关闭文件
                         writer.Close();
+                        //整理文件
+                        ArrangeFile(savepath);
                         //合并文件
                         //FLVMerge.StartMarge(FLVMerge.GetPathList(savepath), savepath);
                     }
@@ -192,6 +224,7 @@ namespace AutoLiveRecorder
         public void StopRecord()
         {
             Recorder.Abort();
+            Monitor.Abort();
             IsRecording = false;
         }
 
@@ -209,7 +242,7 @@ namespace AutoLiveRecorder
             if (filelist.Count == 1)
             {
                 File.Move(filelist[0], savepath);
-                Process.Start("explorer.exe " + Path.GetDirectoryName(savepath));
+                Process.Start("explorer.exe","/select," + savepath);
             }
             else
             {
@@ -220,7 +253,7 @@ namespace AutoLiveRecorder
                     string filename = tmp[tmp.Length - 1];
                     File.Move(i, savepath + "\\" + filename);
                 }
-                Process.Start("explorer.exe " + savepathn);
+                Process.Start("explorer.exe",savepathn);
             }
         }
 

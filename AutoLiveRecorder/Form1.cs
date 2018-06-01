@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Net;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace AutoLiveRecorder
@@ -39,6 +38,17 @@ namespace AutoLiveRecorder
         {
             aa.StopRecord();
         }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox1.Checked)
+            {
+                aa = new B_Live(int.Parse(textBox2.Text));
+                aa.RecordStatusChanged += RecordStatus_Changed;
+                aa.ReadyToRecord(textBox1.Text);
+            }
+        }
+
         /// <summary>
         /// 检查更新
         /// </summary>
@@ -57,7 +67,7 @@ namespace AutoLiveRecorder
                     Process.Start(infos[1]);
                 }
             }
-            else if (MustGUI) MessageBox.Show("版本已是最新","录播姬");
+            else if (MustGUI) MessageBox.Show("版本已是最新", "录播姬");
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -90,7 +100,7 @@ namespace AutoLiveRecorder
             }
             else
             {
-                button1.Enabled = true;
+                button1.Enabled = false;
                 button2.Enabled = false;
                 textBox1.Text = "";
             }
@@ -105,8 +115,18 @@ namespace AutoLiveRecorder
             }
             else
             {
-                textBox1.Text = saveFileDialog1.FileName.Replace("*", "defult");
+                textBox1.Text = "";
             }
+        }
+
+        private void textBox1_Enter(object sender, EventArgs e)
+        {
+            if (textBox1.Text == "请点击此处设置保存路径。") textBox1.Text = ""; textBox1.ForeColor = System.Drawing.Color.Black;
+        }
+
+        private void textBox1_Leave(object sender, EventArgs e)
+        {
+            if (textBox1.Text == "") textBox1.Text = "请点击此处设置保存路径。"; textBox1.ForeColor = System.Drawing.Color.Gray;
         }
 
         private void textBox1_MouseClick(object sender, MouseEventArgs e)
@@ -119,7 +139,22 @@ namespace AutoLiveRecorder
             }
             else
             {
-                textBox1.Text = saveFileDialog1.FileName.Replace("*", "defult");
+                textBox1.Text = "";
+            }
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            if (textBox1.Text == "" || textBox1.Text == "请点击此处设置保存路径。")
+            {
+                checkBox1.Checked = false;
+                checkBox1.Enabled = false;
+                button1.Enabled = false;
+            }
+            else
+            {
+                checkBox1.Enabled = true;
+                button1.Enabled = true;
             }
         }
 
