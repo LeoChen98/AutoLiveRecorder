@@ -65,6 +65,7 @@ namespace AutoLiveRecorder
                 if (MessageBox.Show("有新版本！\r\n" + Application.ProductVersion + "→" + infos[0] + "\r\n更新内容：" + infos[2] + "\r\n更新时间：" + infos[3], "有新版本！", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     Process.Start(infos[1]);
+                    Application.Exit();
                 }
             }
             else if (MustGUI) MessageBox.Show("版本已是最新", "录播姬");
