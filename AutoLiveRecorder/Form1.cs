@@ -160,5 +160,11 @@ namespace AutoLiveRecorder
         }
 
         #endregion Private 方法
+
+        private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Form2 frm2 = new Form2();
+            frm2.ShowDialog();
+        }
     }
 }
