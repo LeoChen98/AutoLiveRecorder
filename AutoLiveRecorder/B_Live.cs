@@ -224,7 +224,10 @@ namespace AutoLiveRecorder
         public void StopRecord()
         {
             Recorder.Abort();
-            Monitor.Abort();
+            if (Monitor != null && Monitor.IsAlive == true)
+            {
+                Monitor.Abort();
+            }
             IsRecording = false;
         }
 

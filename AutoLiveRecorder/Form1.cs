@@ -29,9 +29,15 @@ namespace AutoLiveRecorder
 
         private void button1_Click(object sender, EventArgs e)
         {
-            aa = new B_Live(int.Parse(textBox2.Text));
-            aa.RecordStatusChanged += RecordStatus_Changed;
-            aa.StartRecord(textBox1.Text);
+            if (textBox1.Text == "" || textBox2.Text == "")
+            {
+                MessageBox.Show("参数不能为空！");
+            }else
+            {
+                aa = new B_Live(int.Parse(textBox2.Text));
+                aa.RecordStatusChanged += RecordStatus_Changed;
+                aa.StartRecord(textBox1.Text);
+            }
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -165,6 +171,11 @@ namespace AutoLiveRecorder
         {
             Form2 frm2 = new Form2();
             frm2.ShowDialog();
+        }
+
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
