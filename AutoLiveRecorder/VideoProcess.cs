@@ -9,6 +9,11 @@ namespace AutoLiveRecorder
     class VideoProcess
     {
         static Process FFMpeg = new Process();
+        /// <summary>
+        /// 合并flv并转码为mp4
+        /// </summary>
+        /// <param name="filelist">文件列表</param>
+        /// <param name="savepath">保存位置</param>
         public static void TranscodeToMp4(List<string> filelist,string savepath)
         {
             if (System.IO.File.Exists("ffmpeg.exe"))
@@ -42,6 +47,7 @@ namespace AutoLiveRecorder
                 FFMpeg.BeginErrorReadLine();
                 FFMpeg.WaitForExit();
                 FFMpeg.Close();
+                FFMpeg.Dispose();
             }
             else
             {
