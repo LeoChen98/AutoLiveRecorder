@@ -78,7 +78,7 @@ namespace AutoLiveRecorder
             {
                 if (!System.IO.File.Exists("ffmpeg.exe"))
                 {
-                    if (MessageBox.Show("需要下载ffmpeg到本地！", "录播姬", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    if (MessageBox.Show("需要下载ffmpeg到本地！\r\n点击\"是\"：立即下载ffmpeg，可能会出现短暂的无响应。\r\n点击\"否\"：将不会启用自动转码功能。", "录播姬", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
                         WebClient c = new WebClient();
                         c.DownloadFile("http://update.zhangbudademao.com/112/ffmpeg.exe", "ffmpeg.exe");
@@ -153,6 +153,22 @@ namespace AutoLiveRecorder
         {
             CheckUpdate();
             label3.Text = "当前版本：" + Application.ProductVersion;
+            if (checkBox2.Checked)
+            {
+                if (!System.IO.File.Exists("ffmpeg.exe"))
+                {
+                    if (MessageBox.Show("需要下载ffmpeg到本地！\r\n点击\"是\"：立即下载ffmpeg，可能会出现短暂的无响应。\r\n点击\"否\"：将不会启用自动转码功能。", "录播姬", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    {
+                        WebClient c = new WebClient();
+                        c.DownloadFile("http://update.zhangbudademao.com/112/ffmpeg.exe", "ffmpeg.exe");
+                    }
+                    else
+                    {
+                        checkBox2.Checked = false;
+                        return;
+                    }
+                }
+            }
         }
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
