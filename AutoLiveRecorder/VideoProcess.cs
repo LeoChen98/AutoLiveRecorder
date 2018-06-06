@@ -47,7 +47,7 @@ namespace AutoLiveRecorder
                 FFMpeg.StartInfo.Arguments = "";
                 FFMpeg.StartInfo.UseShellExecute = false;
                 FFMpeg.StartInfo.RedirectStandardError = true;
-                FFMpeg.StartInfo.CreateNoWindow = false;
+                FFMpeg.StartInfo.CreateNoWindow = true;
                 FFMpeg.ErrorDataReceived += new DataReceivedEventHandler(Output);
                 string savepathn = savepath.Substring(0, savepath.LastIndexOf("."));
                 string concatstr = "";
@@ -60,6 +60,7 @@ namespace AutoLiveRecorder
                         FFMpeg.Start();
                         FFMpeg.WaitForExit();
                         FFMpeg.Close();
+                        System.IO.File.Delete(i);
                         if (concatstr == "")
                         {
                             concatstr = "concat:\"" + i + ".ts\"";
@@ -85,6 +86,7 @@ namespace AutoLiveRecorder
                     FFMpeg.WaitForExit();
                     FFMpeg.Close();
                     FFMpeg.Dispose();
+                    System.IO.File.Delete(filelist[0]);
                     TranscodeFinished(savepathn + ".mp4");
                 }
                 //删除临时文件

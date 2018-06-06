@@ -14,6 +14,7 @@ namespace AutoLiveRecorder
     {
         #region Private 字段
 
+        private bool _IsProcessing = false;
         private bool _IsRecording = false;
 
         /// <summary>
@@ -78,6 +79,12 @@ namespace AutoLiveRecorder
         #region Public 委托
 
         /// <summary>
+        /// 处理状态改变事件委托
+        /// </summary>
+        /// <param name="ProcessStatus">录制状态</param>
+        public delegate void ProcessStatusChangedEventHandler(bool ProcessStatus);
+
+        /// <summary>
         /// 录制状态改变事件委托
         /// </summary>
         /// <param name="RecordStatus">录制状态</param>
@@ -88,6 +95,11 @@ namespace AutoLiveRecorder
         #region Public 事件
 
         /// <summary>
+        /// 处理状态改变事件
+        /// </summary>
+        public event ProcessStatusChangedEventHandler ProcessStatusChanged;
+
+        /// <summary>
         /// 录制状态改变事件
         /// </summary>
         public event RecordStatusChangedEvent RecordStatusChanged;
@@ -95,6 +107,30 @@ namespace AutoLiveRecorder
         #endregion Public 事件
 
         #region Public 属性
+
+        /// <summary>
+        /// 指示是否自动转码
+        /// </summary>
+        public bool IsAutoTranscode
+        {
+            get; set;
+        }
+
+        /// <summary>
+        /// 是否正在转码
+        /// </summary>
+        public bool IsProcessing
+        {
+            get
+            {
+                return _IsProcessing;
+            }
+            private set
+            {
+                _IsProcessing = value;
+                ProcessStatusChanged(value);
+            }
+        }
 
         /// <summary>
         /// 指示是否正在录制
@@ -133,7 +169,7 @@ namespace AutoLiveRecorder
             {
                 while (true)
                 {
-                    if (IsLive()&& !IsRecording) StartRecord(savepath);
+                    if (IsLive() && !IsRecording) StartRecord(savepath);
                     System.Threading.Thread.Sleep(1000);
                 }
             }
@@ -241,11 +277,21 @@ namespace AutoLiveRecorder
         /// <param name="savepathn">文件名称（不含扩展名）</param>
         private void ArrangeFile(string savepath)
         {
+            IsProcessing = true;
             string savepathn = savepath.Substring(0, savepath.LastIndexOf("."));
             if (filelist.Count == 1)
             {
                 File.Move(filelist[0], savepath);
-                Process.Start("explorer.exe","/select," + savepath);
+                if (IsAutoTranscode)
+                {
+                    VideoProcess.TranscodeFinished += TranscodeFinished;
+                    VideoProcess.TranscodeToMp4(new List<string>() { savepath }, savepath);
+                }
+                else
+                {
+                    Process.Start("explorer.exe", "/select," + savepath);
+                    IsProcessing = false;
+                }
             }
             else
             {
@@ -255,8 +301,18 @@ namespace AutoLiveRecorder
                     string[] tmp = Regex.Split(i, "\\");
                     string filename = tmp[tmp.Length - 1];
                     File.Move(i, savepath + "\\" + filename);
+                    filelist[filelist.IndexOf(i)] = savepath + "\\" + filename;
                 }
-                Process.Start("explorer.exe",savepathn);
+                if (IsAutoTranscode)
+                {
+                    VideoProcess.TranscodeFinished += TranscodeFinished;
+                    VideoProcess.TranscodeToMp4(filelist, savepath);
+                }
+                else
+                {
+                    Process.Start("explorer.exe", savepathn);
+                    IsProcessing = false;
+                }
             }
         }
 
@@ -280,6 +336,12 @@ namespace AutoLiveRecorder
                 Info.IsLive = true;
                 return true;
             }
+        }
+
+        private void TranscodeFinished(string savepath)
+        {
+            Process.Start("explorer.exe", "/select," + savepath);
+            IsProcessing = false;
         }
 
         #endregion Private 方法

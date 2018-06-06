@@ -13,6 +13,11 @@ namespace AutoLiveRecorder
         private B_Live aa;
         private bool IsRecording = false;
 
+        /// <summary>
+        /// 处理状态
+        /// </summary>
+        private bool ProcessStatus = false;
+
         #endregion Private 字段
 
         #region Public 构造函数
@@ -32,10 +37,13 @@ namespace AutoLiveRecorder
             if (textBox1.Text == "" || textBox2.Text == "")
             {
                 MessageBox.Show("参数不能为空！");
-            }else
+            }
+            else
             {
                 aa = new B_Live(int.Parse(textBox2.Text));
+                aa.IsAutoTranscode = checkBox2.Checked;
                 aa.RecordStatusChanged += RecordStatus_Changed;
+                aa.ProcessStatusChanged += ProcessStatus_Changed;
                 aa.StartRecord(textBox1.Text);
             }
         }
@@ -56,10 +64,53 @@ namespace AutoLiveRecorder
                 else
                 {
                     aa = new B_Live(int.Parse(textBox2.Text));
+                    aa.IsAutoTranscode = checkBox2.Checked;
                     aa.RecordStatusChanged += RecordStatus_Changed;
+                    aa.ProcessStatusChanged += ProcessStatus_Changed;
                     aa.ReadyToRecord(textBox1.Text);
                 }
             }
+        }
+
+        private void checkBox2_CheckedChanged(object sender, EventArgs e)
+        { 
+            if (checkBox2.Checked)
+            {
+                if (!System.IO.File.Exists("ffmpeg.exe"))
+                {
+                    if (MessageBox.Show("需要下载ffmpeg到本地！", "录播姬", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    {
+                        WebClient c = new WebClient();
+                        c.DownloadFile("http://update.zhangbudademao.com/112/ffmpeg.exe", "ffmpeg.exe");
+                    }else
+                    {
+                        checkBox2.Checked = false;
+                        return;
+                    }
+                }
+                saveFileDialog1.DefaultExt = "mp4";
+                saveFileDialog1.Filter = "MP4媒体文件|*.mp4";
+                if(saveFileDialog1.FileName == "*.flv")
+                {
+                    saveFileDialog1.FileName = "*.mp4";
+                }else
+                {
+                    saveFileDialog1.FileName = saveFileDialog1.FileName.Substring(0,saveFileDialog1.FileName.LastIndexOf(".")) + ".mp4";
+                }
+            }else
+            {
+                saveFileDialog1.DefaultExt = "flv";
+                saveFileDialog1.Filter = "flv流文件|*.flv";
+                if (saveFileDialog1.FileName == "*.mp4")
+                {
+                    saveFileDialog1.FileName = "*.flv";
+                }
+                else
+                {
+                    saveFileDialog1.FileName = saveFileDialog1.FileName.Substring(0, saveFileDialog1.FileName.LastIndexOf(".")) + ".flv";
+                }
+            }
+            if (aa != null) aa.IsAutoTranscode = checkBox2.Checked;
         }
 
         /// <summary>
@@ -91,6 +142,11 @@ namespace AutoLiveRecorder
                 MessageBox.Show("正在录制中，请结束录制后重试");
                 e.Cancel = true;
             }
+            if (ProcessStatus)
+            {
+                MessageBox.Show("正在处理录制文件，请稍后重试");
+                e.Cancel = true;
+            }
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -102,6 +158,21 @@ namespace AutoLiveRecorder
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             CheckUpdate(true);
+        }
+
+        private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Form2 frm2 = new Form2();
+            frm2.ShowDialog();
+        }
+
+        /// <summary>
+        /// 处理状态改变
+        /// </summary>
+        /// <param name="ProcessStatus">处理状态</param>
+        private void ProcessStatus_Changed(bool ProcessStatus)
+        {
+            this.ProcessStatus = ProcessStatus;
         }
 
         private void RecordStatus_Changed(bool RecordStatus)
@@ -172,17 +243,10 @@ namespace AutoLiveRecorder
             }
         }
 
-        #endregion Private 方法
-
-        private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            Form2 frm2 = new Form2();
-            frm2.ShowDialog();
-        }
-
         private void textBox2_TextChanged(object sender, EventArgs e)
         {
-
         }
+
+        #endregion Private 方法
     }
 }

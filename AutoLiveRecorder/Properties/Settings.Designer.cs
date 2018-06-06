@@ -34,5 +34,17 @@ namespace AutoLiveRecorder.Properties {
                 this["RoomId"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool AutoTranscode {
+            get {
+                return ((bool)(this["AutoTranscode"]));
+            }
+            set {
+                this["AutoTranscode"] = value;
+            }
+        }
     }
 }
