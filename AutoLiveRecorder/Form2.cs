@@ -21,5 +21,10 @@ namespace AutoLiveRecorder
         {
             Process.Start("https://github.com/LeoChen98/AutoLiveRecorder");
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
     }
 }

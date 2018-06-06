@@ -11,7 +11,7 @@
         public Settings() {
             // // 若要为保存和更改设置添加事件处理程序，请取消注释下列行: 
             //
-            // this.SettingChanging += this.SettingChangingEventHandler;
+            SettingChanging += SettingChangingEventHandler;
             //
             // this.SettingsSaving += this.SettingsSavingEventHandler;
             //

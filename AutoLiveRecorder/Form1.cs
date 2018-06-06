@@ -175,7 +175,7 @@ namespace AutoLiveRecorder
 
         private void textBox2_TextChanged(object sender, EventArgs e)
         {
-
+            //Properties.Settings.Default.Save();
         }
     }
 }
