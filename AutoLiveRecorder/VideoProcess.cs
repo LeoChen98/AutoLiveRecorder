@@ -23,7 +23,7 @@ namespace AutoLiveRecorder
                 string concatstr = "";
                 foreach (string i in filelist)
                 {
-                    FFMpeg.StartInfo.Arguments = "-i \"" + i + "\" -vcodec copy \"" + i + ".ts\"";
+                    FFMpeg.StartInfo.Arguments = "-i \"" + i + "\" -c copy -bsf:v h264_mp4toannexb -f mpegts \"" + i + ".ts\"";
                     FFMpeg.Start();
                     FFMpeg.BeginErrorReadLine();
                     FFMpeg.WaitForExit();
@@ -37,7 +37,7 @@ namespace AutoLiveRecorder
                         concatstr += "|\"" + i + ".ts\"";
                     }
                 }
-                FFMpeg.StartInfo.Arguments = "-i \"" + concatstr + "\" -vcodec copy \"" + savepathn + ".mp4\"";
+                FFMpeg.StartInfo.Arguments = "-i \"" + concatstr + "\" -c copy -bsf:a aac_adtstoasc -movflags +faststart \"" + savepathn + ".mp4\"";
                 FFMpeg.Start();
                 FFMpeg.BeginErrorReadLine();
                 FFMpeg.WaitForExit();
