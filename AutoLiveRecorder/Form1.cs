@@ -49,9 +49,16 @@ namespace AutoLiveRecorder
         {
             if (checkBox1.Checked)
             {
-                aa = new B_Live(int.Parse(textBox2.Text));
-                aa.RecordStatusChanged += RecordStatus_Changed;
-                aa.ReadyToRecord(textBox1.Text);
+                if (textBox1.Text == "" || textBox2.Text == "")
+                {
+                    MessageBox.Show("参数不能为空！");
+                }
+                else
+                {
+                    aa = new B_Live(int.Parse(textBox2.Text));
+                    aa.RecordStatusChanged += RecordStatus_Changed;
+                    aa.ReadyToRecord(textBox1.Text);
+                }
             }
         }
 
@@ -175,7 +182,7 @@ namespace AutoLiveRecorder
 
         private void textBox2_TextChanged(object sender, EventArgs e)
         {
-            //Properties.Settings.Default.Save();
+
         }
     }
 }
