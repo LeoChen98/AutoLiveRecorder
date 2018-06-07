@@ -2,6 +2,7 @@
 
 [![Version](https://img.shields.io/github/release/LeoChen98/AutoLiveRecorder.svg?label=Version)](https://github.com/LeoChen98/AutoLiveRecorder/releases)
 [![GitHub issues](https://img.shields.io/github/issues/LeoChen98/AutoLiveRecorder.svg)](https://github.com/LeoChen98/AutoLiveRecorder/issues)
+[![需要帮助的 issue](https://img.shields.io/github/issues/LeoChen98/AutoLiveRecorder/help%20wanted.svg?label=需要帮助的%20issue)](https://github.com/LeoChen98/AutoLiveRecorder/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22)
 [![Language](https://img.shields.io/badge/%E8%AF%AD%E8%A8%80-%E4%B8%AD%E6%96%87-brightgreen.svg)](#)
 [![DevLanguage](https://img.shields.io/badge/%E5%BC%80%E5%8F%91%E8%AF%AD%E8%A8%80-C%23-brightgreen.svg)](#)
 [![.netVersion](https://img.shields.io/badge/.net-3.5-brightgreen.svg)](#)
