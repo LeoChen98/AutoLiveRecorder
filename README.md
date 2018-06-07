@@ -1,4 +1,4 @@
-﻿# AutoLiveRecorder
+﻿# AutoLiveRecorder（录播姬）
 
 [![Version](https://img.shields.io/github/release/LeoChen98/AutoLiveRecorder.svg?label=Version)](https://github.com/LeoChen98/AutoLiveRecorder/releases)
 [![GitHub issues](https://img.shields.io/github/issues/LeoChen98/AutoLiveRecorder.svg)](https://github.com/LeoChen98/AutoLiveRecorder/issues)
@@ -31,6 +31,7 @@
 * 即将加入命令行启动功能，以便使用计划任务的方式启动。
 * 预计下版本会使用WPF重构UI。
 * 将基于PHP开发服务器拓展插件。
+* 后续将支持其他平台。
 
 ## 已知问题
 1. 录制获得的flv文件的最后一个tag不完整，对应的部分可能在播放器中存在无法控制的问题。（可通过转格式的方式解决）
