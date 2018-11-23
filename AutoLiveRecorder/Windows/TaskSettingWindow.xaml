@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AutoLiveRecorder"
         mc:Ignorable="d"
-        Title="任务设置 - 录播姬" Height="328" Width="600" Background="{x:Null}" AllowsTransparency="True" WindowStyle="None" WindowStartupLocation="CenterScreen">
+        Title="任务设置 - 录播姬" Height="328" Width="600" Background="{x:Null}" AllowsTransparency="True" WindowStyle="None" WindowStartupLocation="CenterScreen" Loaded="window_Loaded">
     <Border CornerRadius="20">
         <Border.Background>
             <ImageBrush ImageSource="/bg.jpg" />
@@ -22,13 +22,13 @@
             </Grid>
             <Grid x:Name="ContentGrid" Margin="0,55,0,0">
                 <Label HorizontalAlignment="Left" Height="24.2" VerticalAlignment="Top" Width="72" Margin="52,10,0,0" x:Name="lbl_URLKey">直播间地址:</Label>
-                <TextBox Height="24.2" VerticalAlignment="Top" Margin="129,10,52,0" x:Name="TB_URL" />
+                <TextBox Height="24.2" VerticalAlignment="Top" Margin="129,10,52,0" x:Name="TB_URL" TextChanged="TB_URL_TextChanged" />
                 <TextBox Margin="10,39.2,0,10" HorizontalAlignment="Left" Width="282.4" VerticalScrollBarVisibility="Auto" IsReadOnly="True" x:Name="TB_RoomInfo" Background="#99FFFFFF" />
                 <Grid x:Name="SettingGrid" Margin="297.4,39.2,10,74">
                     <RadioButton x:Name="RB_StartNow" HorizontalAlignment="Left" Height="15" VerticalAlignment="Top" Width="100" Margin="10,10,0,0" BorderThickness="0" IsChecked="True">立即开始</RadioButton>
                     <RadioButton x:Name="RB_StartWhenLiveStart" HorizontalAlignment="Left" Height="15" VerticalAlignment="Top" Width="100" Margin="10,30,0,0">开播时开始</RadioButton>
                     <RadioButton x:Name="RB_StartWhenTime" HorizontalAlignment="Left" Height="15" VerticalAlignment="Top" Width="100" Margin="10,50,0,0">定时开始</RadioButton>
-                    <Border Margin="10,75,10,0" Height="31.8" x:Name="TimeSetterBorder" BorderBrush="#99000000" BorderThickness="1" IsEnabled="False" VerticalAlignment="Top" d:LayoutOverrides="Height">
+                    <Border Margin="10,75,10,0" Height="31.8" x:Name="TimeSetterBorder" BorderBrush="#99000000" BorderThickness="1" IsEnabled="{Binding IsChecked, ElementName=RB_StartWhenTime}" VerticalAlignment="Top" d:LayoutOverrides="Height">
                         <Grid x:Name="TimeSetter">
                             <Label Margin="0,0,60,0" VerticalContentAlignment="Center" Content="每天，xx:xx:xx" x:Name="lbl_TimeInfo" ToolTip="{Binding Content, ElementName=lbl_TimeInfo}" />
                             <Label HorizontalAlignment="Right" Width="55" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="#99FFFFFF" Content="设置" x:Name="Btn_ShowTimeSetterWindow" MouseUp="Btn_ShowTimeSetterWindow_MouseUp" MouseEnter="Btn_ShowTimeSetterWindow_MouseEnter" MouseLeave="Btn_ShowTimeSetterWindow_MouseLeave" />

@@ -10,16 +10,16 @@ namespace AutoLiveRecorder
     /// </summary>
     public partial class AboutWindow : Window
     {
-        #region Public Constructors
+        #region Public 构造函数
 
         public AboutWindow()
         {
             InitializeComponent();
         }
 
-        #endregion Public Constructors
+        #endregion Public 构造函数
 
-        #region Private Methods
+        #region Private 方法
 
         /// <summary>
         /// 检查更新按钮鼠标弹起
@@ -93,6 +93,6 @@ namespace AutoLiveRecorder
             }
         }
 
-        #endregion Private Methods
+        #endregion Private 方法
     }
 }

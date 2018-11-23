@@ -5,7 +5,27 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AutoLiveRecorder"
         mc:Ignorable="d"
-        Title="CloseBtnModeChoserWindow" Height="450" Width="800">
-    <Grid>
-    </Grid>
+        Title="关闭 - 录播姬" Height="225" Width="400" WindowStyle="None" AllowsTransparency="True" Background="{x:Null}" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded">
+    <Border CornerRadius="20">
+        <Border.Background>
+            <ImageBrush ImageSource="/AutoLiveRecorder;component/bg.jpg" />
+        </Border.Background>
+        <Grid x:Name="MainGrid">
+            <Grid x:Name="HeaderGrid" Height="50" VerticalAlignment="Top" d:LayoutOverrides="Height, TopMargin, BottomMargin">
+                <Grid x:Name="TitleGrid" Height="34.4" Margin="20,10,49.4,0" VerticalAlignment="Top" MouseMove="TitleGrid_MouseMove">
+                    <Label x:Name="lbl_Title" FontSize="16" Foreground="Black" VerticalContentAlignment="Center" Content="关闭 - 录播姬" Margin="36,0,0,0" />
+                    <Image x:Name="Logo" HorizontalAlignment="Left" Margin="0" Source="/AutoLiveRecorder;component/favicon1.png" Width="36" Height="36" Stretch="None" />
+                </Grid>
+                <Label x:Name="Btn_Close" Height="34.4" Margin="0,10,10,0" VerticalAlignment="Top" FontSize="16" Foreground="Black" HorizontalAlignment="Right" Width="34.4" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MouseUp="Btn_Close_MouseUp" MouseEnter="Btn_Close_MouseEnter" MouseLeave="Btn_Close_MouseLeave" ToolTip="关闭" Content="×" />
+            </Grid>
+            <Grid x:Name="ContentGrid" Margin="10,50,10,10">
+                <Label x:Name="lbl_Notice" Height="24" Margin="10,10,166,0" VerticalAlignment="Top" Content="你点击了&quot;退出&quot;按钮，请问你是要："></Label>
+                <RadioButton x:Name="RB_Minisize" Content="最小化到托盘" HorizontalAlignment="Left" Height="18" Margin="19,45,0,0" VerticalAlignment="Top" Width="108" VerticalContentAlignment="Center" IsChecked="True" />
+                <RadioButton x:Name="RB_Exit" Content="退出程序" HorizontalAlignment="Left" Margin="19,68,0,79" Width="108" VerticalContentAlignment="Center" />
+                <CheckBox x:Name="CB_NotAskAgain" Height="19" VerticalAlignment="Bottom" Margin="19,0,149,55" Content="不再询问(你可在&quot;设置&quot;窗口中修改)" VerticalContentAlignment="Center" IsChecked="True" />
+                <Label x:Name="Btn_Comfirm" HorizontalAlignment="Left" Height="23" VerticalAlignment="Bottom" Width="69" Margin="118,0,0,10" Content="确定" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="#66FFFFFF" MouseUp="Btn_Comfirm_MouseUp" MouseEnter="Btn_Comfirm_MouseEnter" MouseLeave="Btn_Comfirm_MouseLeave" />
+                <Label x:Name="Btn_Cancel" Height="23" VerticalAlignment="Bottom" Margin="0,0,119,10" Content="取消" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Right" Width="69" Background="#66FFFFFF" MouseUp="Btn_Cancel_MouseUp" MouseEnter="Btn_Cancel_MouseEnter" MouseLeave="Btn_Cancel_MouseLeave" />
+            </Grid>
+        </Grid>
+    </Border>
 </Window>

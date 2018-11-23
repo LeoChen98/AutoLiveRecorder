@@ -7,13 +7,13 @@ namespace AutoLiveRecorder
     /// </summary>
     public partial class WorkList : UserControl
     {
-        #region Public Constructors
+        #region Public 构造函数
 
         public WorkList()
         {
             InitializeComponent();
         }
 
-        #endregion Public Constructors
+        #endregion Public 构造函数
     }
 }

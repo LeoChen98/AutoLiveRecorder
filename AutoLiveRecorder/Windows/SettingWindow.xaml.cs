@@ -9,16 +9,16 @@ namespace AutoLiveRecorder
     /// </summary>
     public partial class SettingWindow : Window
     {
-        #region Public Constructors
+        #region Public 构造函数
 
         public SettingWindow()
         {
             InitializeComponent();
         }
 
-        #endregion Public Constructors
+        #endregion Public 构造函数
 
-        #region Private Methods
+        #region Private 方法
 
         private void Btn_Close_MouseEnter(object sender, MouseEventArgs e)
         {
@@ -187,6 +187,6 @@ namespace AutoLiveRecorder
             }
         }
 
-        #endregion Private Methods
+        #endregion Private 方法
     }
 }

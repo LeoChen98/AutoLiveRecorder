@@ -9,7 +9,7 @@ namespace AutoLiveRecorder
     /// </summary>
     public partial class MainWindow : Window
     {
-        #region Public Constructors
+        #region Public 构造函数
 
         /// <summary>
         /// 构造函数
@@ -18,12 +18,13 @@ namespace AutoLiveRecorder
         {
             InitializeComponent();
 
+            //初始化托盘图标
             NotifyIcon.NotifyIcon_Init();
         }
 
-        #endregion Public Constructors
+        #endregion Public 构造函数
 
-        #region Private Methods
+        #region Private 方法
 
         /// <summary>
         /// 添加任务按钮鼠标进入
@@ -43,6 +44,17 @@ namespace AutoLiveRecorder
         private void Btn_AddTask_MouseLeave(object sender, MouseEventArgs e)
         {
             Btn_AddTask.Background = null;
+        }
+
+        /// <summary>
+        /// 添加任务按钮鼠标弹起
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Btn_AddTask_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            TaskSettingWindow t = new TaskSettingWindow();
+            t.Show();
         }
 
         /// <summary>
@@ -66,6 +78,15 @@ namespace AutoLiveRecorder
         }
 
         /// <summary>
+        /// 全部开始按钮弹起
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Btn_AllTaskStart_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+        }
+
+        /// <summary>
         /// 全部停止鼠标进入
         /// </summary>
         /// <param name="sender"></param>
@@ -83,6 +104,15 @@ namespace AutoLiveRecorder
         private void Btn_AllTaskStop_MouseLeave(object sender, MouseEventArgs e)
         {
             Btn_AllTaskStop.Background = null;
+        }
+
+        /// <summary>
+        /// 全部停止按钮鼠标弹起
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Btn_AllTaskStop_MouseUp(object sender, MouseButtonEventArgs e)
+        {
         }
 
         /// <summary>
@@ -159,7 +189,9 @@ namespace AutoLiveRecorder
             Btn_Menu.Background = new SolidColorBrush(Color.FromArgb(20, 255, 255, 255));
         }
 
-        /// <summary> 菜单按钮鼠标离开 </summary> <param name="sender"></param> <param name="e"></param> <summary>
+        /// <summary> 菜单按钮鼠标离开 </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Btn_Menu_MouseLeave(object sender, MouseEventArgs e)
         {
             Btn_Menu.Background = null;
@@ -226,6 +258,15 @@ namespace AutoLiveRecorder
         }
 
         /// <summary>
+        /// 删除任务按钮鼠标弹起
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Btn_RemoveTask_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+        }
+
+        /// <summary>
         /// 关于按钮点击
         /// </summary>
         /// <param name="sender"></param>
@@ -247,7 +288,11 @@ namespace AutoLiveRecorder
             s.Show();
         }
 
-        /// 标题标签鼠标移动 </summary> <param name="sender"></param> <param name="e"></param>
+        /// <summary>
+        /// 标题标签鼠标移动
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void TitleGrid_MouseMove(object sender, MouseEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed)
@@ -256,6 +301,6 @@ namespace AutoLiveRecorder
             }
         }
 
-        #endregion Private Methods
+        #endregion Private 方法
     }
 }

@@ -5,7 +5,46 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AutoLiveRecorder"
         mc:Ignorable="d"
-        Title="TimeSetterWindow" Height="450" Width="800">
-    <Grid>
-    </Grid>
+        Title="设置时间 - 录播姬" Height="225" Width="400" Background="{x:Null}" AllowsTransparency="True" WindowStyle="None" WindowStartupLocation="CenterScreen" Icon="/AutoLiveRecorder;component/favicon1.png" Loaded="Window_Loaded">
+    <Border CornerRadius="20">
+        <Border.Background>
+            <ImageBrush ImageSource="/AutoLiveRecorder;component/bg.jpg" />
+        </Border.Background>
+        <Grid x:Name="MainGrid">
+            <Grid x:Name="HeaderGrid" Height="50" VerticalAlignment="Top" d:LayoutOverrides="Height, TopMargin, BottomMargin">
+                <Grid x:Name="TitleGrid" Height="34.4" Margin="20,10,49.4,0" VerticalAlignment="Top" MouseMove="TitleGrid_MouseMove">
+                    <Label x:Name="lbl_Title" FontSize="16" Foreground="Black" VerticalContentAlignment="Center" Content="设置时间 - 录播姬" Margin="36,0,0,0" />
+                    <Image x:Name="Logo" HorizontalAlignment="Left" Margin="0" Source="/AutoLiveRecorder;component/favicon1.png" Width="36" Height="36" Stretch="None" />
+                </Grid>
+                <Label x:Name="Btn_Close" Height="34.4" Margin="0,10,10,0" VerticalAlignment="Top" FontSize="16" Foreground="Black" HorizontalAlignment="Right" Width="34.4" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MouseUp="Btn_Close_MouseUp" MouseEnter="Btn_Close_MouseEnter" MouseLeave="Btn_Close_MouseLeave" ToolTip="关闭" Content="×" />
+            </Grid>
+            <Grid x:Name="ContentGrid" Margin="10,50,10,10">
+                <Label Height="28" VerticalAlignment="Top" Margin="106.075,10,155.075,0" VerticalContentAlignment="Center" Content="开始时间：    ：    ：    " d:LayoutOverrides="Width" />
+                <TextBox x:Name="TB_Hour" Height="27" VerticalAlignment="Top" Margin="165,11,0,0" Text="12" HorizontalAlignment="Left" Width="21" VerticalContentAlignment="Center" IsReadOnly="True"  ToolTip="滚动滚轮以调整"  MouseWheel="TB_Hour_MouseWheel" />
+                <TextBox x:Name="TB_Minute" Height="27" VerticalAlignment="Top" Margin="0,11,168,0" Text="12" HorizontalAlignment="Right" Width="21" VerticalContentAlignment="Center" IsReadOnly="True" ToolTip="滚动滚轮以调整" MouseWheel="TB_Minute_MouseWheel" />
+                <TextBox x:Name="TB_Second" Height="27" VerticalAlignment="Top" Margin="0,11,142,0" Text="12" HorizontalAlignment="Right" Width="21" VerticalContentAlignment="Center" IsReadOnly="True" ToolTip="滚动滚轮以调整" MouseWheel="TB_Second_MouseWheel" />
+                <Label HorizontalAlignment="Left" Height="23" VerticalAlignment="Top" Width="101.075" Margin="24,38,0,0" Content="频率：" Padding="0,5,5,5"></Label>
+                <RadioButton x:Name="RB_EveryDay" Content="每天" HorizontalAlignment="Left" Margin="24,81,0,69" Width="53" />
+                <RadioButton x:Name="RB_Once" Content="仅一次" HorizontalAlignment="Left" Margin="24,61,0,0" Width="68" Height="15" VerticalAlignment="Top" IsChecked="True" />
+                <RadioButton x:Name="RB_EveryWeek" Content="每周" HorizontalAlignment="Left" Height="15" Margin="24,0,0,49" VerticalAlignment="Bottom" Width="53" />
+                <Grid x:Name="DateSetGrid" Height="28" Margin="118,53.62,130.075,0" VerticalAlignment="Top" IsEnabled="{Binding IsChecked, ElementName=RB_Once}">
+                    <Label VerticalContentAlignment="Center" Content="      年        月        日" HorizontalAlignment="Left" />
+                    <TextBox x:Name="TB_Year" Margin="-14,1,0,0" Text="2018" VerticalContentAlignment="Center" HorizontalAlignment="Left" Width="35" IsReadOnly="True" ToolTip="滚动滚轮以调整" MouseWheel="TB_Year_MouseWheel" />
+                    <TextBox x:Name="TB_Month" Margin="43,1,0,0" Text="12" HorizontalAlignment="Left" Width="21" VerticalContentAlignment="Center" IsReadOnly="True" ToolTip="滚动滚轮以调整" MouseWheel="TB_Month_MouseWheel" />
+                    <TextBox x:Name="TB_Date" Margin="0,1,28,0" Text="12" HorizontalAlignment="Right" Width="21" VerticalContentAlignment="Center" IsReadOnly="True" ToolTip="滚动滚轮以调整" MouseWheel="TB_Date_MouseWheel" />
+                </Grid>
+                <Grid x:Name="DaySetGrid" Height="32" Margin="82,0,10,33" VerticalAlignment="Bottom" IsEnabled="{Binding IsChecked, ElementName=RB_EveryWeek}">
+                    <CheckBox x:Name="CB_Monday" HorizontalAlignment="Left" Height="16" VerticalAlignment="Top" Width="54" VerticalContentAlignment="Center" Content="周一" />
+                    <CheckBox x:Name="CB_Tuesday" Height="16" VerticalAlignment="Top" Margin="59,0,0,0" VerticalContentAlignment="Center" Content="周二" HorizontalAlignment="Left" Width="54" />
+                    <CheckBox x:Name="CB_Wednesday" Height="16" VerticalAlignment="Top" Margin="116,0,118,0" VerticalContentAlignment="Center" Content="周三" />
+                    <CheckBox x:Name="CB_Thursday" HorizontalAlignment="Right" Width="54" Margin="0,0.12,59,15.88" VerticalContentAlignment="Center" Content="周四" />
+                    <CheckBox x:Name="CB_Friday" HorizontalAlignment="Right" Height="16" VerticalAlignment="Top" Width="54" VerticalContentAlignment="Center" Content="周五" />
+                    <CheckBox x:Name="CB_Saturday" HorizontalAlignment="Left" Height="16" VerticalAlignment="Bottom" Width="54" VerticalContentAlignment="Center" Content="周六" />
+                    <CheckBox x:Name="CB_Sunday" Height="16" VerticalAlignment="Bottom" Margin="59,0,0,0" VerticalContentAlignment="Center" Content="周日" HorizontalAlignment="Left" Width="54" />
+                </Grid>
+                <Label x:Name="Btn_Comfirm" HorizontalAlignment="Left" Height="23" VerticalAlignment="Bottom" Width="69" Margin="118,0,0,1.329" Content="确定" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="#66FFFFFF" MouseUp="Btn_Comfirm_MouseUp" MouseEnter="Btn_Comfirm_MouseEnter" MouseLeave="Btn_Comfirm_MouseLeave" />
+                <Label x:Name="Btn_Cancel" Height="23" VerticalAlignment="Bottom" Margin="0,0,119,1.329" Content="取消" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Right" Width="69" Background="#66FFFFFF" MouseUp="Btn_Cancel_MouseUp" MouseEnter="Btn_Cancel_MouseEnter" MouseLeave="Btn_Cancel_MouseLeave" />
+            </Grid>
+        </Grid>
+    </Border>
 </Window>

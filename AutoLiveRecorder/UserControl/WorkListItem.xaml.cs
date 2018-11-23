@@ -10,13 +10,13 @@ namespace AutoLiveRecorder
     /// </summary>
     public partial class WorkListItem : UserControl
     {
-        #region Private Fields
+        #region Private 字段
 
         private Cls_WorkListItem Item;
 
-        #endregion Private Fields
+        #endregion Private 字段
 
-        #region Public Constructors
+        #region Public 构造函数
 
         public WorkListItem(Cls_WorkListItem Item)
         {
@@ -43,9 +43,9 @@ namespace AutoLiveRecorder
             BindingOperations.SetBinding(lbl_TaskStatus, ContentProperty, bindStatus);
         }
 
-        #endregion Public Constructors
+        #endregion Public 构造函数
 
-        #region Private Methods
+        #region Private 方法
 
         private void Btn_Setting_MouseEnter(object sender, MouseEventArgs e)
         {
@@ -93,6 +93,6 @@ namespace AutoLiveRecorder
         {
         }
 
-        #endregion Private Methods
+        #endregion Private 方法
     }
 }

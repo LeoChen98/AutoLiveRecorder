@@ -5,16 +5,16 @@ namespace AutoLiveRecorder
 {
     internal class NotifyIcon
     {
-        #region Private Fields
+        #region Private 字段
 
         /// <summary>
         /// 系统托盘图标实例
         /// </summary>
         private static System.Windows.Forms.NotifyIcon NI;
 
-        #endregion Private Fields
+        #endregion Private 字段
 
-        #region Public Methods
+        #region Public 方法
 
         /// <summary>
         /// 系统托盘图标初始化程序
@@ -115,6 +115,6 @@ namespace AutoLiveRecorder
             }
         }
 
-        #endregion Public Methods
+        #endregion Public 方法
     }
 }

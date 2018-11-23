@@ -8,17 +8,21 @@ namespace AutoLiveRecorder
     /// </summary>
     public class Cls_WorkListItem : INotifyPropertyChanged
     {
-        #region Private Fields
+        #region Private 字段
 
+        private string _Frequency;
         private string _Host;
+        private bool _IsRecordDanmu;
+        private bool _IsTranslateAfterCompleted;
         private PlatformType _Platform;
         private string _Roomid;
         private string _RoomTitle;
+        private DateTime _StartTime;
         private string _Status;
 
-        #endregion Private Fields
+        #endregion Private 字段
 
-        #region Public Constructors
+        #region Public 构造函数
 
         /// <summary>
         /// 空白构造函数
@@ -44,15 +48,15 @@ namespace AutoLiveRecorder
         {
         }
 
-        #endregion Public Constructors
+        #endregion Public 构造函数
 
-        #region Public Events
+        #region Public 事件
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        #endregion Public Events
+        #endregion Public 事件
 
-        #region Public Enums
+        #region Public 枚举
 
         /// <summary>
         /// 平台枚举
@@ -101,14 +105,40 @@ namespace AutoLiveRecorder
             WhenTime = 2
         }
 
-        #endregion Public Enums
+        #endregion Public 枚举
 
-        #region Public Properties
+        #region Public 属性
+
+        /// <summary>
+        /// 任务频率和时间
+        /// </summary>
+        public string FNT
+        {
+            get
+            {
+                if (_Frequency != null && _StartTime != null)
+                {
+                    return _Frequency + "," + _StartTime.Hour + ":" + _StartTime.Minute + ":" + _StartTime.Second;
+                }
+                else
+                {
+                    return "";
+                }
+            }
+        }
 
         /// <summary>
         /// 任务频率
         /// </summary>
-        public string Frequency { get; set; }
+        public string Frequency
+        {
+            get { return _Frequency; }
+            set
+            {
+                _Frequency = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("FNT"));
+            }
+        }
 
         /// <summary>
         /// 主播
@@ -122,16 +152,22 @@ namespace AutoLiveRecorder
             set
             {
                 _Host = value;
-                //激发事件
-                if (PropertyChanged != null)
-                    this.PropertyChanged.Invoke(this, new PropertyChangedEventArgs("RoomInfo"));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("RoomInfo"));
             }
         }
 
         /// <summary>
         /// 是否录制弹幕
         /// </summary>
-        public bool IsRecordDanmu { get; set; }
+        public bool IsRecordDanmu
+        {
+            get { return _IsRecordDanmu; }
+            set
+            {
+                _IsRecordDanmu = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsRecordDanmu"));
+            }
+        }
 
         /// <summary>
         /// 是否支持弹幕
@@ -141,7 +177,15 @@ namespace AutoLiveRecorder
         /// <summary>
         /// 是否录制完成后转码
         /// </summary>
-        public bool IsTranslateAfterCompleted { get; set; }
+        public bool IsTranslateAfterCompleted
+        {
+            get { return _IsTranslateAfterCompleted; }
+            set
+            {
+                _IsTranslateAfterCompleted = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsTranslateAfterCompleted"));
+            }
+        }
 
         /// <summary>
         /// 平台
@@ -155,9 +199,7 @@ namespace AutoLiveRecorder
             set
             {
                 _Platform = value;
-                //激发事件
-                if (PropertyChanged != null)
-                    this.PropertyChanged.Invoke(this, new PropertyChangedEventArgs("RoomInfo"));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("RoomInfo"));
             }
         }
 
@@ -173,12 +215,14 @@ namespace AutoLiveRecorder
             set
             {
                 _Roomid = value;
-                //激发事件
-                if (PropertyChanged != null)
-                    this.PropertyChanged.Invoke(this, new PropertyChangedEventArgs("RoomInfo"));
+
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("RoomInfo"));
             }
         }
 
+        /// <summary>
+        /// 房间信息
+        /// </summary>
         public string RoomInfo
         {
             get
@@ -211,9 +255,8 @@ namespace AutoLiveRecorder
             get { return _RoomTitle; }
             set
             {
-                _RoomTitle = value; //激发事件
-                if (PropertyChanged != null)
-                    this.PropertyChanged.Invoke(this, new PropertyChangedEventArgs("RoomTitle"));
+                _RoomTitle = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("RoomTitle"));
             }
         }
 
@@ -225,7 +268,15 @@ namespace AutoLiveRecorder
         /// <summary>
         /// 开始时间
         /// </summary>
-        public DateTime StartTime { get; set; }
+        public DateTime StartTime
+        {
+            get { return _StartTime; }
+            set
+            {
+                _StartTime = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("FNT"));
+            }
+        }
 
         /// <summary>
         /// 状态
@@ -239,9 +290,8 @@ namespace AutoLiveRecorder
             set
             {
                 _Status = value;
-                //激发事件
-                if (PropertyChanged != null)
-                    PropertyChanged.Invoke(this, new PropertyChangedEventArgs("Status"));
+
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Status"));
             }
         }
 
@@ -255,6 +305,6 @@ namespace AutoLiveRecorder
         /// </summary>
         public string VideoUrl { get; set; }
 
-        #endregion Public Properties
+        #endregion Public 属性
     }
 }

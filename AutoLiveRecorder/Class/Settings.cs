@@ -4,7 +4,7 @@
     // 在加载设置值之后将引发 SettingsLoaded 事件。 在保存设置值之前将引发 SettingsSaving 事件。
     internal sealed partial class Settings
     {
-        #region Public Constructors
+        #region Public 构造函数
 
         public Settings()
         {
@@ -15,9 +15,9 @@
             // this.SettingsSaving += this.SettingsSavingEventHandler;
         }
 
-        #endregion Public Constructors
+        #endregion Public 构造函数
 
-        #region Private Methods
+        #region Private 方法
 
         private void SettingChangingEventHandler(object sender, System.Configuration.SettingChangingEventArgs e)
         {
@@ -29,6 +29,6 @@
             // 在此处添加用于处理 SettingsSaving 事件的代码。
         }
 
-        #endregion Private Methods
+        #endregion Private 方法
     }
 }
