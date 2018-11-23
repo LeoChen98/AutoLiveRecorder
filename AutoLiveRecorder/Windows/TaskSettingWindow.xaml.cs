@@ -11,7 +11,7 @@ namespace AutoLiveRecorder
     {
         #region Public Constructors
 
-        public TaskSettingWindow()
+        public TaskSettingWindow(bool IsNew = false)
         {
             InitializeComponent();
         }

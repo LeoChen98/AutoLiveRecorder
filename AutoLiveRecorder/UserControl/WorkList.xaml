@@ -4,12 +4,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:AutoLiveRecorder"
-             xmlns:Properties="clr-namespace:AutoLiveRecorder.Properties" x:Class="AutoLiveRecorder.WorkList"
+             xmlns:Properties="clr-namespace:AutoLiveRecorder" x:Class="AutoLiveRecorder.WorkList"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800" Width="770" Height="345">
     <ScrollViewer Background="#99FFFFFF">
-        <Grid Height="335" Width="742.1">
-            <local:WorkListItem Height="50" VerticalAlignment="Top" Width="Auto" />
+        <Grid Height="335" Width="742.1" x:Name="Container">
         </Grid>
     </ScrollViewer>
 </UserControl>

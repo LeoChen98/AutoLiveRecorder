@@ -1,4 +1,5 @@
 ﻿using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -9,11 +10,37 @@ namespace AutoLiveRecorder
     /// </summary>
     public partial class WorkListItem : UserControl
     {
+        #region Private Fields
+
+        private Cls_WorkListItem Item;
+
+        #endregion Private Fields
+
         #region Public Constructors
 
-        public WorkListItem()
+        public WorkListItem(Cls_WorkListItem Item)
         {
             InitializeComponent();
+
+            this.Item = Item;
+
+            Binding bindTitle = new Binding();
+            bindTitle.Source = Item;
+            bindTitle.Mode = BindingMode.OneWay;
+            bindTitle.Path = new System.Windows.PropertyPath("RoomTitle");
+            BindingOperations.SetBinding(lbl_RoomTitle, ContentProperty, bindTitle);
+
+            Binding bindInfo = new Binding();
+            bindInfo.Source = Item;
+            bindInfo.Mode = BindingMode.OneWay;
+            bindInfo.Path = new System.Windows.PropertyPath("RoomInfo");
+            BindingOperations.SetBinding(lbl_RoomInfo, ContentProperty, bindInfo);
+
+            Binding bindStatus = new Binding();
+            bindStatus.Source = Item;
+            bindStatus.Mode = BindingMode.OneWay;
+            bindStatus.Path = new System.Windows.PropertyPath("Status");
+            BindingOperations.SetBinding(lbl_TaskStatus, ContentProperty, bindStatus);
         }
 
         #endregion Public Constructors
@@ -59,6 +86,10 @@ namespace AutoLiveRecorder
         }
 
         private void Btn_Stop_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+        }
+
+        private void UserControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
         }
 
