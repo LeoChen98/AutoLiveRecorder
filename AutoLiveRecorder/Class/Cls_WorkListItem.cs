@@ -8,7 +8,7 @@ namespace AutoLiveRecorder
     /// </summary>
     public class Cls_WorkListItem : INotifyPropertyChanged
     {
-        #region Private 字段
+        #region Private Fields
 
         private string _Frequency;
         private string _Host;
@@ -20,9 +20,9 @@ namespace AutoLiveRecorder
         private DateTime _StartTime;
         private string _Status;
 
-        #endregion Private 字段
+        #endregion Private Fields
 
-        #region Public 构造函数
+        #region Public Constructors
 
         /// <summary>
         /// 空白构造函数
@@ -48,15 +48,15 @@ namespace AutoLiveRecorder
         {
         }
 
-        #endregion Public 构造函数
+        #endregion Public Constructors
 
-        #region Public 事件
+        #region Public Events
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        #endregion Public 事件
+        #endregion Public Events
 
-        #region Public 枚举
+        #region Public Enums
 
         /// <summary>
         /// 平台枚举
@@ -105,9 +105,9 @@ namespace AutoLiveRecorder
             WhenTime = 2
         }
 
-        #endregion Public 枚举
+        #endregion Public Enums
 
-        #region Public 属性
+        #region Public Properties
 
         /// <summary>
         /// 任务频率和时间
@@ -155,6 +155,11 @@ namespace AutoLiveRecorder
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("RoomInfo"));
             }
         }
+
+        /// <summary>
+        /// 是否在播
+        /// </summary>
+        public bool IsLiving { get; set; }
 
         /// <summary>
         /// 是否录制弹幕
@@ -303,8 +308,8 @@ namespace AutoLiveRecorder
         /// <summary>
         /// 视频地址
         /// </summary>
-        public string VideoUrl { get; set; }
+        public string[] VideoUrl { get; set; }
 
-        #endregion Public 属性
+        #endregion Public Properties
     }
 }
