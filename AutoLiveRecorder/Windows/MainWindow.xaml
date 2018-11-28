@@ -1,0 +1,47 @@
+﻿<Window x:Class="AutoLiveRecorder.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AutoLiveRecorder"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800" WindowStyle="None" Background="{x:Null}" AllowsTransparency="True" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize">
+    <Window.Resources>
+        <ContextMenu x:Key="ContextMenu">
+            <MenuItem Name="Btn_ShowSettingWindow" Header="设置" Click="Btn_ShowSettingWindow_Click" />
+            <Separator />
+            <MenuItem Name="Btn_CheckUpdate" Header="检查更新" Click="Btn_CheckUpdate_Click" />
+            <MenuItem Name="Btn_ShowAboutWindow" Header="关于" Click="Btn_ShowAboutWindow_Click" />
+            <Separator />
+            <MenuItem Name="Btn_Exit" Header="退出" Click="Btn_Exit_Click" />
+        </ContextMenu>
+    </Window.Resources>
+
+    <Border CornerRadius="20">
+        <Border.Background>
+            <ImageBrush ImageSource="/bg.jpg" />
+        </Border.Background>
+
+        <Grid x:Name="MainGrid">
+            <Grid x:Name="HeaderGrid" Height="50" VerticalAlignment="Top">
+                <Grid x:Name="TitleGrid" Height="34.4" Margin="20,10,127.8,0" VerticalAlignment="Top" MouseMove="TitleGrid_MouseMove">
+                    <Label x:Name="lbl_Title" FontSize="16" Foreground="Black" VerticalContentAlignment="Center" Content="录播姬" Margin="36,0,0,0" Grid.ColumnSpan="2" />
+                    <Image x:Name="Logo" HorizontalAlignment="Left" Margin="0" Source="/favicon1.png" Width="36" Height="36" Stretch="None" />
+                </Grid>
+                <Label x:Name="Btn_Menu" Height="34.4" Margin="670.8,10,0,0" VerticalAlignment="Top" FontSize="16" Foreground="Black" HorizontalAlignment="Left" Width="34" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" ContextMenu="{StaticResource ContextMenu}" MouseUp="Btn_Menu_MouseUp" MouseEnter="Btn_Menu_MouseEnter" MouseLeave="Btn_Menu_MouseLeave" ToolTip="菜单" Content="···" />
+                <Label x:Name="Btn_Minisize" Height="34.4" Margin="709.8,12.04,49.4,0" VerticalAlignment="Top" FontSize="16" Foreground="Black" Width="34.4" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MouseUp="Btn_Minisize_MouseUp" MouseEnter="Btn_Minisize_MouseEnter" MouseLeave="Btn_Minisize_MouseLeave" ToolTip="最小化" Content="-" />
+                <Label x:Name="Btn_Close" Height="34.4" Margin="0,10,10,0" VerticalAlignment="Top" FontSize="16" Foreground="Black" HorizontalAlignment="Right" Width="34.4" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MouseUp="Btn_Close_MouseUp" MouseEnter="Btn_Close_MouseEnter" MouseLeave="Btn_Close_MouseLeave" ToolTip="关闭" Content="×" />
+            </Grid>
+            <Grid Margin="20,51.44,20,23.2" x:Name="ContentGrid">
+                <Grid x:Name="ControlGroup" Height="30" VerticalAlignment="Top" Background="#33FFFFFF">
+                    <Label x:Name="Btn_AddTask" HorizontalAlignment="Left" Width="60" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MouseEnter="Btn_AddTask_MouseEnter" MouseLeave="Btn_AddTask_MouseLeave" MouseUp="Btn_AddTask_MouseUp" Content="添加任务" />
+                    <Label x:Name="Btn_RemoveTask" HorizontalAlignment="Left" Width="60" Margin="65,0,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MouseEnter="Btn_RemoveTask_MouseEnter" MouseLeave="Btn_RemoveTask_MouseLeave" MouseUp="Btn_RemoveTask_MouseUp" Content="删除任务" />
+                    <Label x:Name="Btn_AllTaskStart" HorizontalAlignment="Left" Width="60" Margin="130,0,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MouseEnter="Btn_AllTaskStart_MouseEnter" MouseLeave="Btn_AllTaskStart_MouseLeave" MouseUp="Btn_AllTaskStart_MouseUp" Content="全部开始" />
+                    <Label x:Name="Btn_AllTaskStop" HorizontalAlignment="Left" Width="60" Margin="195,0,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MouseEnter="Btn_AllTaskStop_MouseEnter" MouseLeave="Btn_AllTaskStop_MouseLeave" MouseUp="Btn_AllTaskStop_MouseUp" Content="全部停止" />
+                    <Label x:Name="lbl_Notice" Margin="260,1.6,170.306,0" VerticalContentAlignment="Center" Visibility="Hidden">温馨提示：“全部开始”按钮只对启动条件为“手动”的任务有效</Label>
+                </Grid>
+                <local:WorkList x:Name="WorkList" Height="Auto" Margin="0,37.16,0,0" Width="Auto" />
+            </Grid>
+        </Grid>
+    </Border>
+</Window>

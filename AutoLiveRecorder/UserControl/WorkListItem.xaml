@@ -1,0 +1,23 @@
+﻿<UserControl x:Class="AutoLiveRecorder.WorkListItem"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:AutoLiveRecorder"
+             mc:Ignorable="d"
+             d:DesignHeight="450" d:DesignWidth="800" Width="750" Height="50" Loaded="UserControl_Loaded">
+    <Grid>
+        <CheckBox x:Name="checkBox" Content="" HorizontalAlignment="Left" Margin="10,10,0,10" Width="17.06" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" VerticalAlignment="Center" Checked="CheckBox_Checked" />
+        <Grid Margin="32.06,3.363,309.34,3.55" x:Name="TaskInfoGrid">
+            <Label x:Name="lbl_RoomTitle" Content="[RoomTitle]" Margin="10,0,10,18.45" FontSize="13.333" ToolTip="{Binding Content, ElementName=lbl_RoomTitle}" />
+            <Label x:Name="lbl_RoomInfo" Content="[Host]·[RoomId]·[Platform]" Margin="10,18.45,10,0" Foreground="#FF5F5F5F" ToolTip="{Binding Content, ElementName=lbl_RoomInfo}" />
+        </Grid>
+        <Label x:Name="lbl_TaskStatus" Content="[Status]" HorizontalAlignment="Right" Margin="0,11.363,189.4,14" Width="114.94" ToolTip="{Binding Content, ElementName=lbl_TaskStatus}" Foreground="Black" />
+        <Grid HorizontalAlignment="Right" Margin="0,11.363,10,14" Width="174.4" x:Name="CommandGrid">
+            <Label x:Name="Btn_Start" Content="开始" HorizontalAlignment="Left" Width="54.8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MouseUp="Btn_Start_MouseUp" MouseEnter="Btn_Start_MouseEnter" MouseLeave="Btn_Start_MouseLeave" Background="{x:Null}" />
+            <Label x:Name="Btn_Stop" Content="停止" Margin="59.8,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MouseUp="Btn_Stop_MouseUp" MouseEnter="Btn_Stop_MouseEnter" MouseLeave="Btn_Stop_MouseLeave" />
+            <Label x:Name="Btn_Setting" Content="设置" HorizontalAlignment="Right" Width="54.8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MouseUp="Btn_Setting_MouseUp" MouseEnter="Btn_Setting_MouseEnter" MouseLeave="Btn_Setting_MouseLeave" />
+        </Grid>
+        <Rectangle Fill="#FFBCBCBC" Height="1" Margin="0" VerticalAlignment="Bottom" Width="1000" HorizontalAlignment="Center" StrokeThickness="0" />
+    </Grid>
+</UserControl>
