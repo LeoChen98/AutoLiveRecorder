@@ -43,6 +43,7 @@
     <ApplicationIcon>favicon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PresentationFramework.Luna" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -64,6 +65,9 @@
     </ApplicationDefinition>
     <Compile Include="Class\B_Live.cs" />
     <Compile Include="Class\Cls_WorkListItem.cs" />
+    <Compile Include="Class\DependencyProperties.cs" />
+    <Compile Include="Class\Update.cs" />
+    <Compile Include="FLVMerge.cs" />
     <Compile Include="Windows\AboutWindow.xaml.cs">
       <DependentUpon>AboutWindow.xaml</DependentUpon>
     </Compile>
@@ -161,6 +165,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="favicon1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="箭头.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -10,7 +10,7 @@ namespace AutoLiveRecorder
     /// </summary>
     public partial class TaskSettingWindow : Window
     {
-        #region Private 字段
+        #region Private Fields
 
         /// <summary>
         /// 是否是新建
@@ -22,16 +22,23 @@ namespace AutoLiveRecorder
         /// </summary>
         private Cls_WorkListItem Item;
 
-        #endregion Private 字段
+        /// <summary>
+        /// 任务列表控件
+        /// </summary>
+        private WorkList TaskList;
 
-        #region Public 构造函数
+        #endregion Private Fields
+
+        #region Public Constructors
 
         /// <summary>
         /// 新建任务构造函数
         /// </summary>
-        public TaskSettingWindow()
+        public TaskSettingWindow(WorkList TaskList)
         {
             InitializeComponent();
+
+            this.TaskList = TaskList;
 
             Item = new Cls_WorkListItem();
             IsNew = true;
@@ -43,27 +50,29 @@ namespace AutoLiveRecorder
         /// 修改任务构造函数
         /// </summary>
         /// <param name="Item"></param>
-        public TaskSettingWindow(Cls_WorkListItem Item)
+        public TaskSettingWindow(Cls_WorkListItem Item, WorkList TaskList)
         {
             InitializeComponent();
+
+            this.TaskList = TaskList;
 
             this.Item = Item;
 
             SetBinding();
         }
 
-        #endregion Public 构造函数
+        #endregion Public Constructors
 
-        #region Private 方法
+        #region Private Methods
 
         private void Btn_Cancel_MouseEnter(object sender, MouseEventArgs e)
         {
-            Btn_Cancel.Background = new SolidColorBrush(Color.FromArgb(60, 255, 255, 255));
+            Btn_Cancel.Background = new SolidColorBrush(Color.FromArgb(153, 255, 255, 255));
         }
 
         private void Btn_Cancel_MouseLeave(object sender, MouseEventArgs e)
         {
-            Btn_Cancel.Background = new SolidColorBrush(Color.FromArgb(40, 255, 255, 255));
+            Btn_Cancel.Background = new SolidColorBrush(Color.FromArgb(102, 255, 255, 255));
         }
 
         private void Btn_Cancel_MouseUp(object sender, MouseButtonEventArgs e)
@@ -88,18 +97,42 @@ namespace AutoLiveRecorder
 
         private void Btn_Comfirm_MouseEnter(object sender, MouseEventArgs e)
         {
-            Btn_Comfirm.Background = new SolidColorBrush(Color.FromArgb(60, 255, 255, 255));
+            Btn_Comfirm.Background = new SolidColorBrush(Color.FromArgb(153, 255, 255, 255));
         }
 
         private void Btn_Comfirm_MouseLeave(object sender, MouseEventArgs e)
         {
-            Btn_Comfirm.Background = new SolidColorBrush(Color.FromArgb(40, 255, 255, 255));
+            Btn_Comfirm.Background = new SolidColorBrush(Color.FromArgb(102, 255, 255, 255));
         }
 
         private void Btn_Comfirm_MouseUp(object sender, MouseButtonEventArgs e)
         {
             if (TB_RoomInfo.Text != "" && TB_RoomInfo.Text != "URL格式错误或平台未支持。")
             {
+                if (!(bool)RB_StartWhenTime.IsChecked || lbl_TimeInfo.Content.ToString() != "")
+                {
+                    if ((bool)RB_StartNow.IsChecked)
+                        Item.StartMode = Cls_WorkListItem.StartModeType.Now;
+                    else if ((bool)RB_StartWhenLiveStart.IsChecked)
+                        Item.StartMode = Cls_WorkListItem.StartModeType.WhenStart;
+                    else if ((bool)RB_Manuel.IsChecked)
+                        Item.StartMode = Cls_WorkListItem.StartModeType.Manuel;
+                    else if ((bool)RB_StartWhenTime.IsChecked)
+                        Item.StartMode = Cls_WorkListItem.StartModeType.WhenTime;
+
+                    if (IsNew)
+                    {
+                        Bas.TaskList.Add(Item);
+                        TaskList.AddTask(Item);
+                    }
+
+                    Item.SettingFinished();
+                    Close();
+                }
+                else
+                {
+                    System.Windows.Forms.MessageBox.Show("请选择正确的启动条件或启动时间！");
+                }
             }
             else
             {
@@ -143,30 +176,49 @@ namespace AutoLiveRecorder
         /// </summary>
         private void SetBinding()
         {
-            Binding bindFNT = new Binding();
-            bindFNT.Source = Item;
-            bindFNT.Mode = BindingMode.OneWay;
-            bindFNT.Path = new PropertyPath("FNT");
+            Binding bindFNT = new Binding
+            {
+                Source = Item,
+                Mode = BindingMode.OneWay,
+                Path = new PropertyPath("FNT")
+            };
             BindingOperations.SetBinding(lbl_TimeInfo, ContentProperty, bindFNT);
 
-            DependencyProperty IsChecked = DependencyProperty.Register("IsChecked", typeof(bool), typeof(System.Windows.Controls.CheckBox));
+            Binding bindDanmu = new Binding
+            {
+                Source = Item,
+                Mode = BindingMode.TwoWay,
+                Path = new PropertyPath("IsRecordDanmu")
+            };
+            BindingOperations.SetBinding(CB_IsRecordDanmu, DependencyProperties.IsChecked, bindDanmu);
 
-            Binding bindDanmu = new Binding();
-            bindDanmu.Source = Item;
-            bindDanmu.Mode = BindingMode.TwoWay;
-            bindDanmu.Path = new PropertyPath("IsRecordDanmu");
-            BindingOperations.SetBinding(CB_IsRecordDanmu, IsChecked, bindDanmu);
+            Binding bindTrans = new Binding
+            {
+                Source = Item,
+                Mode = BindingMode.TwoWay,
+                Path = new PropertyPath("IsTranslateAfterCompleted")
+            };
+            BindingOperations.SetBinding(CB_IsTranslateAfterCompleted, DependencyProperties.IsChecked, bindTrans);
 
-            Binding bindTrans = new Binding();
-            bindTrans.Source = Item;
-            bindTrans.Mode = BindingMode.TwoWay;
-            bindTrans.Path = new PropertyPath("IsTranslateAfterCompleted");
-            BindingOperations.SetBinding(CB_IsTranslateAfterCompleted, IsChecked, bindTrans);
+            Binding bindInfo = new Binding
+            {
+                Source = Item,
+                Mode = BindingMode.OneWay,
+                Path = new PropertyPath("RoomInfoLong")
+            };
+            BindingOperations.SetBinding(TB_RoomInfo, System.Windows.Controls.TextBox.TextProperty, bindInfo);
+            Binding bindURL = new Binding
+            {
+                Source = Item,
+                Mode = BindingMode.OneWay,
+                Path = new PropertyPath("URL")
+            };
+            BindingOperations.SetBinding(TB_URL, System.Windows.Controls.TextBox.TextProperty, bindURL);
         }
 
         private void TB_URL_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
         {
-            TB_RoomInfo.Text = Bas.AnalysisURL(TB_URL.Text);
+            Bas.AnalysisURL(TB_URL.Text, ref Item);
         }
 
         private void TitleGrid_MouseMove(object sender, MouseEventArgs e)
@@ -193,11 +245,15 @@ namespace AutoLiveRecorder
                     RB_StartWhenTime.IsChecked = true;
                     break;
 
+                case Cls_WorkListItem.StartModeType.Manuel:
+                    RB_Manuel.IsChecked = true;
+                    break;
+
                 default:
                     break;
             }
         }
 
-        #endregion Private 方法
+        #endregion Private Methods
     }
 }

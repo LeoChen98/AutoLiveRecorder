@@ -10,16 +10,16 @@ namespace AutoLiveRecorder
     /// </summary>
     public partial class AboutWindow : Window
     {
-        #region Public 构造函数
+        #region Public Constructors
 
         public AboutWindow()
         {
             InitializeComponent();
         }
 
-        #endregion Public 构造函数
+        #endregion Public Constructors
 
-        #region Private 方法
+        #region Private Methods
 
         /// <summary>
         /// 检查更新按钮鼠标弹起
@@ -28,6 +28,7 @@ namespace AutoLiveRecorder
         /// <param name="e"></param>
         private void Btn_CheckUpdate_MouseUp(object sender, MouseButtonEventArgs e)
         {
+            Update.CheckUpdate();
         }
 
         /// <summary>
@@ -93,6 +94,6 @@ namespace AutoLiveRecorder
             }
         }
 
-        #endregion Private 方法
+        #endregion Private Methods
     }
 }

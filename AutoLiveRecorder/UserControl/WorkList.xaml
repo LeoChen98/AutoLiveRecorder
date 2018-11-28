@@ -4,11 +4,210 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:AutoLiveRecorder"
-             xmlns:Properties="clr-namespace:AutoLiveRecorder" x:Class="AutoLiveRecorder.WorkList"
+             xmlns:Properties="clr-namespace:AutoLiveRecorder"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Luna"
              mc:Ignorable="d"
-             d:DesignHeight="450" d:DesignWidth="800" Width="770" Height="345">
-    <ScrollViewer Background="#99FFFFFF">
-        <Grid Height="335" Width="742.1" x:Name="Container">
+             d:DesignHeight="450" d:DesignWidth="800" Width="770" Height="345" x:Class="AutoLiveRecorder.WorkList">
+    <UserControl.Resources>
+        <!--x:Key="ScrollBarThumb" TargetType="{x:Type Thumb}"-->
+        <SolidColorBrush x:Key="ThumbBorderBackground" Color="#FFCDCDCD" />
+        <SolidColorBrush x:Key="ThumbMouseOverBackground" Color="#FF959393" />
+        <SolidColorBrush x:Key="ThumbDraggingBackground" Color="#FF505050" />
+
+        <!--x:Key="ScrollBarStyle1" TargetType="{x:Type ScrollBar}"-->
+        <!--1,垂直与水平值相反-->
+        <sys:Double x:Key="PepeatButtonPathWidth">8</sys:Double>
+        <sys:Double x:Key="PepeatButtonPathHeight">6</sys:Double>
+        <!--2,垂直与水平值一样-->
+        <SolidColorBrush x:Key="PepeatButtonPathFill" Color="#FF444F4F" />
+        <SolidColorBrush x:Key="PepeatButtonPathMouseOverFill" Color="Black" />
+        <SolidColorBrush x:Key="PepeatButtonMouseOverBackground" Color="#FFDEDCDC" />
+        <SolidColorBrush x:Key="ScrollBarDisabledBackground" Color="#F4F4F4" />
+        <SolidColorBrush x:Key="ScrollBarBackground" Color="#F4F4F4" />
+
+        <Style x:Key="ScrollBarButton" TargetType="{x:Type RepeatButton}">
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Setter Property="Focusable" Value="false" />
+            <Setter Property="IsTabStop" Value="false" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type RepeatButton}">
+                        <Themes:ScrollChrome x:Name="Chrome" RenderMouseOver="{TemplateBinding IsMouseOver}" RenderPressed="{TemplateBinding IsPressed}" SnapsToDevicePixels="true" Themes:ScrollChrome.ScrollGlyph="{TemplateBinding Themes:ScrollChrome.ScrollGlyph}" />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="VerticalScrollBarPageButton" TargetType="{x:Type RepeatButton}">
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Focusable" Value="false" />
+            <Setter Property="IsTabStop" Value="false" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type RepeatButton}">
+                        <Rectangle Fill="{TemplateBinding Background}" Height="{TemplateBinding Height}" Width="{TemplateBinding Width}" />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="ScrollBarThumb" TargetType="{x:Type Thumb}">
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Setter Property="IsTabStop" Value="false" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Thumb}">
+                        <Border x:Name="border" Background="{StaticResource ThumbBorderBackground}" />
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource ThumbMouseOverBackground}" />
+                            </Trigger>
+                            <Trigger Property="IsDragging" Value="True">
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource ThumbDraggingBackground}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="HorizontalScrollBarPageButton" TargetType="{x:Type RepeatButton}">
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Focusable" Value="false" />
+            <Setter Property="IsTabStop" Value="false" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type RepeatButton}">
+                        <Rectangle Fill="{TemplateBinding Background}" Height="{TemplateBinding Height}" Width="{TemplateBinding Width}" />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="ScrollBarStyle1" TargetType="{x:Type ScrollBar}">
+            <Setter Property="Background" Value="{StaticResource ScrollBarBackground}" />
+            <Setter Property="Stylus.IsPressAndHoldEnabled" Value="false" />
+            <Setter Property="Stylus.IsFlicksEnabled" Value="false" />
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+            <Setter Property="Width" Value="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}" />
+            <Setter Property="MinWidth" Value="{DynamicResource {x:Static SystemParameters.VerticalScrollBarWidthKey}}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ScrollBar}">
+                        <Grid x:Name="Bg" Background="{TemplateBinding Background}" SnapsToDevicePixels="true">
+                            <Grid.RowDefinitions>
+                                <RowDefinition MaxHeight="{DynamicResource {x:Static SystemParameters.VerticalScrollBarButtonHeightKey}}" />
+                                <RowDefinition Height="0.00001*" />
+                                <RowDefinition MaxHeight="{DynamicResource {x:Static SystemParameters.VerticalScrollBarButtonHeightKey}}" />
+                            </Grid.RowDefinitions>
+                            <RepeatButton x:Name="upButton" Command="{x:Static ScrollBar.LineUpCommand}" IsEnabled="{TemplateBinding IsMouseOver}" BorderBrush="{x:Null}" Foreground="{x:Null}" BorderThickness="0">
+                                <Path x:Name="upPath" Height="{StaticResource PepeatButtonPathHeight}" Width="{StaticResource PepeatButtonPathWidth}" Stretch="Fill" Fill="{StaticResource PepeatButtonPathFill}" Data="F1 M 37.8516,35.625L 34.6849,38.7917L 23.6016,50.2708L 23.6016,39.9792L 37.8516,24.9375L 52.1016,39.9792L 52.1016,50.2708L 41.0182,38.7917L 37.8516,35.625 Z " />
+                            </RepeatButton>
+                            <Track x:Name="PART_Track" IsDirectionReversed="true" IsEnabled="{TemplateBinding IsMouseOver}" Grid.Row="1">
+                                <Track.DecreaseRepeatButton>
+                                    <RepeatButton Command="{x:Static ScrollBar.PageUpCommand}" Style="{StaticResource VerticalScrollBarPageButton}" />
+                                </Track.DecreaseRepeatButton>
+                                <Track.IncreaseRepeatButton>
+                                    <RepeatButton Command="{x:Static ScrollBar.PageDownCommand}" Style="{StaticResource VerticalScrollBarPageButton}" />
+                                </Track.IncreaseRepeatButton>
+                                <Track.Thumb>
+                                    <Thumb Style="{StaticResource ScrollBarThumb}" Themes:ScrollChrome.ScrollGlyph="VerticalGripper" />
+                                </Track.Thumb>
+                            </Track>
+                            <RepeatButton x:Name="downButton" Command="{x:Static ScrollBar.LineDownCommand}" IsEnabled="{TemplateBinding IsMouseOver}" Grid.Row="2" Foreground="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0">
+                                <Path x:Name="downPath" Height="{StaticResource PepeatButtonPathHeight}" Width="{StaticResource PepeatButtonPathWidth}" Stretch="Fill" Fill="{StaticResource PepeatButtonPathFill}" Data="F1 M 37.8516,39.5833L 52.1016,24.9375L 52.1016,35.2292L 37.8516,50.2708L 23.6016,35.2292L 23.6016,24.9375L 37.8516,39.5833 Z " />
+                            </RepeatButton>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsEnabled" Value="True" SourceName="upButton">
+                                <Setter Property="Fill" TargetName="upPath" Value="{StaticResource PepeatButtonPathMouseOverFill}" />
+                                <Setter Property="Fill" TargetName="downPath" Value="{StaticResource PepeatButtonPathMouseOverFill}" />
+                                <Setter Property="Background" TargetName="upButton" Value="{StaticResource PepeatButtonMouseOverBackground}" />
+                                <Setter Property="Background" TargetName="downButton" Value="{StaticResource PepeatButtonMouseOverBackground}" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Background" TargetName="Bg" Value="{StaticResource ScrollBarDisabledBackground}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="Orientation" Value="Horizontal">
+                    <Setter Property="Background" Value="{StaticResource ScrollBarBackground}" />
+                    <Setter Property="Width" Value="Auto" />
+                    <Setter Property="MinWidth" Value="0" />
+                    <Setter Property="Height" Value="{DynamicResource {x:Static SystemParameters.HorizontalScrollBarHeightKey}}" />
+                    <Setter Property="MinHeight" Value="{DynamicResource {x:Static SystemParameters.HorizontalScrollBarHeightKey}}" />
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type ScrollBar}">
+                                <Grid x:Name="Bg" Background="{TemplateBinding Background}" SnapsToDevicePixels="true">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition MaxWidth="{DynamicResource {x:Static SystemParameters.HorizontalScrollBarButtonWidthKey}}" />
+                                        <ColumnDefinition Width="0.00001*" />
+                                        <ColumnDefinition MaxWidth="{DynamicResource {x:Static SystemParameters.HorizontalScrollBarButtonWidthKey}}" />
+                                    </Grid.ColumnDefinitions>
+                                    <RepeatButton x:Name="leftButton" Command="{x:Static ScrollBar.LineLeftCommand}" IsEnabled="{TemplateBinding IsMouseOver}" Foreground="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0">
+                                        <Path x:Name="leftPath" Height="{StaticResource PepeatButtonPathWidth}" Width="{StaticResource PepeatButtonPathHeight}" Stretch="Fill" Fill="DarkSlateGray" Data="F1 M 35.8724,37.6042L 39.0391,40.7708L 50.5182,51.8542L 40.2266,51.8542L 25.1849,37.6041L 40.2266,23.3542L 50.5182,23.3542L 39.0391,34.4375L 35.8724,37.6042 Z " />
+                                    </RepeatButton>
+                                    <Track x:Name="PART_Track" Grid.Column="1" IsEnabled="{TemplateBinding IsMouseOver}">
+                                        <Track.DecreaseRepeatButton>
+                                            <RepeatButton Command="{x:Static ScrollBar.PageLeftCommand}" Style="{StaticResource HorizontalScrollBarPageButton}" />
+                                        </Track.DecreaseRepeatButton>
+                                        <Track.IncreaseRepeatButton>
+                                            <RepeatButton Command="{x:Static ScrollBar.PageRightCommand}" Style="{StaticResource HorizontalScrollBarPageButton}" />
+                                        </Track.IncreaseRepeatButton>
+                                        <Track.Thumb>
+                                            <Thumb Style="{StaticResource ScrollBarThumb}" Themes:ScrollChrome.ScrollGlyph="HorizontalGripper" />
+                                        </Track.Thumb>
+                                    </Track>
+                                    <RepeatButton x:Name="rightButton" Grid.Column="2" Command="{x:Static ScrollBar.LineRightCommand}" IsEnabled="{TemplateBinding IsMouseOver}" Foreground="{x:Null}" BorderBrush="{x:Null}" BorderThickness="0">
+                                        <Path x:Name="rightPath" Height="{StaticResource PepeatButtonPathWidth}" Width="{StaticResource PepeatButtonPathHeight}" Stretch="Fill" Fill="{StaticResource PepeatButtonPathFill}" Data="F1 M 39.8307,37.6042L 36.6641,34.4375L 25.1849,23.3542L 35.4766,23.3542L 50.5182,37.6042L 35.4766,51.8542L 25.1849,51.8542L 36.6641,40.7708L 39.8307,37.6042 Z " />
+                                    </RepeatButton>
+                                </Grid>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsEnabled" Value="True" SourceName="leftButton">
+                                        <Setter Property="Fill" TargetName="leftPath" Value="{StaticResource PepeatButtonPathMouseOverFill}" />
+                                        <Setter Property="Fill" TargetName="rightPath" Value="{StaticResource PepeatButtonPathMouseOverFill}" />
+                                        <Setter Property="Background" TargetName="leftButton" Value="{StaticResource PepeatButtonMouseOverBackground}" />
+                                        <Setter Property="Background" TargetName="rightButton" Value="{StaticResource PepeatButtonMouseOverBackground}" />
+                                    </Trigger>
+                                    <Trigger Property="IsEnabled" Value="false">
+                                        <Setter Property="Background" TargetName="Bg" Value="{StaticResource ScrollBarDisabledBackground}" />
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!--总样式x:Key="ScrollViewerStyle"，引用此处Key即可-->
+        <ControlTemplate x:Key="ScrollViewerStyle" TargetType="{x:Type ScrollViewer}">
+            <Grid x:Name="Grid" Background="{TemplateBinding Background}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <ScrollBar x:Name="PART_VerticalScrollBar" AutomationProperties.AutomationId="VerticalScrollBar" Cursor="Arrow" Grid.Column="1" Maximum="{TemplateBinding ScrollableHeight}" Minimum="0" Grid.Row="0" Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}" Value="{Binding VerticalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" ViewportSize="{TemplateBinding ViewportHeight}" Style="{DynamicResource ScrollBarStyle1}" />
+                <ScrollBar x:Name="PART_HorizontalScrollBar" AutomationProperties.AutomationId="HorizontalScrollBar" Cursor="Arrow" Grid.Column="0" Maximum="{TemplateBinding ScrollableWidth}" Minimum="0" Orientation="Horizontal" Grid.Row="1" Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}" Value="{Binding HorizontalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" ViewportSize="{TemplateBinding ViewportWidth}" Style="{DynamicResource ScrollBarStyle1}" />
+                <ScrollContentPresenter x:Name="PART_ScrollContentPresenter" CanContentScroll="{TemplateBinding ScrollViewer.CanContentScroll}" CanHorizontallyScroll="False" CanVerticallyScroll="False" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" Grid.Column="0" Margin="{TemplateBinding Padding}" Grid.Row="0" />
+            </Grid>
+        </ControlTemplate>
+    </UserControl.Resources>
+
+    <Grid>
+        <ScrollViewer x:Name="scr" Margin="0" VerticalScrollBarVisibility="Auto" Background="#99FFFFFF" Template="{DynamicResource ScrollViewerStyle}">
+            <WrapPanel x:Name="Container" />
+        </ScrollViewer>
+        <Grid x:Name="EmptyNotice">
+            <Label Content="列表空空如也，请先添加一个任务哦~" FontSize="32" Margin="72.8,35.3,69.866,0" VerticalAlignment="Top" />
+            <Image x:Name="___AutoLiveRecorder_component_箭头_png" HorizontalAlignment="Left" Source="/AutoLiveRecorder;component/箭头.png" Stretch="Fill" Width="72.8" Height="72.8" VerticalAlignment="Top" />
         </Grid>
-    </ScrollViewer>
+    </Grid>
 </UserControl>

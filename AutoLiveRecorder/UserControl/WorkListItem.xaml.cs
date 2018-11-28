@@ -10,42 +10,51 @@ namespace AutoLiveRecorder
     /// </summary>
     public partial class WorkListItem : UserControl
     {
-        #region Private 字段
+        #region Private Fields
 
         private Cls_WorkListItem Item;
 
-        #endregion Private 字段
+        private new WorkList Parent;
 
-        #region Public 构造函数
+        #endregion Private Fields
 
-        public WorkListItem(Cls_WorkListItem Item)
+        #region Public Constructors
+
+        public WorkListItem(Cls_WorkListItem Item, WorkList Parent)
         {
             InitializeComponent();
 
             this.Item = Item;
+            this.Parent = Parent;
 
-            Binding bindTitle = new Binding();
-            bindTitle.Source = Item;
-            bindTitle.Mode = BindingMode.OneWay;
-            bindTitle.Path = new System.Windows.PropertyPath("RoomTitle");
+            Binding bindTitle = new Binding
+            {
+                Source = Item,
+                Mode = BindingMode.OneWay,
+                Path = new System.Windows.PropertyPath("RoomTitle")
+            };
             BindingOperations.SetBinding(lbl_RoomTitle, ContentProperty, bindTitle);
 
-            Binding bindInfo = new Binding();
-            bindInfo.Source = Item;
-            bindInfo.Mode = BindingMode.OneWay;
-            bindInfo.Path = new System.Windows.PropertyPath("RoomInfo");
+            Binding bindInfo = new Binding
+            {
+                Source = Item,
+                Mode = BindingMode.OneWay,
+                Path = new System.Windows.PropertyPath("RoomInfo")
+            };
             BindingOperations.SetBinding(lbl_RoomInfo, ContentProperty, bindInfo);
 
-            Binding bindStatus = new Binding();
-            bindStatus.Source = Item;
-            bindStatus.Mode = BindingMode.OneWay;
-            bindStatus.Path = new System.Windows.PropertyPath("Status");
+            Binding bindStatus = new Binding
+            {
+                Source = Item,
+                Mode = BindingMode.OneWay,
+                Path = new System.Windows.PropertyPath("StatusString")
+            };
             BindingOperations.SetBinding(lbl_TaskStatus, ContentProperty, bindStatus);
         }
 
-        #endregion Public 构造函数
+        #endregion Public Constructors
 
-        #region Private 方法
+        #region Private Methods
 
         private void Btn_Setting_MouseEnter(object sender, MouseEventArgs e)
         {
@@ -59,6 +68,8 @@ namespace AutoLiveRecorder
 
         private void Btn_Setting_MouseUp(object sender, MouseButtonEventArgs e)
         {
+            TaskSettingWindow t = new TaskSettingWindow(Item, Parent);
+            t.Show();
         }
 
         private void Btn_Start_MouseEnter(object sender, MouseEventArgs e)
@@ -73,6 +84,10 @@ namespace AutoLiveRecorder
 
         private void Btn_Start_MouseUp(object sender, MouseButtonEventArgs e)
         {
+            if (Item.StartMode == Cls_WorkListItem.StartModeType.Manuel)
+            {
+                Item.StartRecord(true);
+            }
         }
 
         private void Btn_Stop_MouseEnter(object sender, MouseEventArgs e)
@@ -87,12 +102,18 @@ namespace AutoLiveRecorder
 
         private void Btn_Stop_MouseUp(object sender, MouseButtonEventArgs e)
         {
+            Item.StopRecord();
+        }
+
+        private void CheckBox_Checked(object sender, System.Windows.RoutedEventArgs e)
+        {
+            Parent.ItemSelected(this, Item, (bool)checkBox.IsChecked);
         }
 
         private void UserControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
         }
 
-        #endregion Private 方法
+        #endregion Private Methods
     }
 }

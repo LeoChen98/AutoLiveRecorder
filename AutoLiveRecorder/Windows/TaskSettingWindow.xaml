@@ -28,6 +28,7 @@
                     <RadioButton x:Name="RB_StartNow" HorizontalAlignment="Left" Height="15" VerticalAlignment="Top" Width="100" Margin="10,10,0,0" BorderThickness="0" IsChecked="True">立即开始</RadioButton>
                     <RadioButton x:Name="RB_StartWhenLiveStart" HorizontalAlignment="Left" Height="15" VerticalAlignment="Top" Width="100" Margin="10,30,0,0">开播时开始</RadioButton>
                     <RadioButton x:Name="RB_StartWhenTime" HorizontalAlignment="Left" Height="15" VerticalAlignment="Top" Width="100" Margin="10,50,0,0">定时开始</RadioButton>
+                    <RadioButton x:Name="RB_Manuel" HorizontalAlignment="Left" Height="15" VerticalAlignment="Top" Width="100" Margin="115,10,0,0">手动</RadioButton>
                     <Border Margin="10,75,10,0" Height="31.8" x:Name="TimeSetterBorder" BorderBrush="#99000000" BorderThickness="1" IsEnabled="{Binding IsChecked, ElementName=RB_StartWhenTime}" VerticalAlignment="Top" d:LayoutOverrides="Height">
                         <Grid x:Name="TimeSetter">
                             <Label Margin="0,0,60,0" VerticalContentAlignment="Center" Content="每天，xx:xx:xx" x:Name="lbl_TimeInfo" ToolTip="{Binding Content, ElementName=lbl_TimeInfo}" />

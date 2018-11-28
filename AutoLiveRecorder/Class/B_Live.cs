@@ -16,76 +16,102 @@ namespace AutoLiveRecorder
         /// </summary>
         /// <param name="item">任务实例</param>
         /// <returns></returns>
-        public static Cls_WorkListItem GetRoomInfo(Cls_WorkListItem item)
+        public static bool GetRoomInfo(ref Cls_WorkListItem item)
         {
-            string str = Bas.GetBody(item.URL);
+            try
+            {
+                string str = Bas.GetBody(item.URL);
+                if (!string.IsNullOrEmpty(str))
+                {
+                    Regex reg = new Regex("<script>window.__NEPTUNE_IS_MY_WAIFU__={.*}</script>");
+                    string jsonstr = reg.Match(str).Value;
+                    jsonstr = Regex.Split(Regex.Split(jsonstr, "window.__NEPTUNE_IS_MY_WAIFU__=")[1], "</script>")[0];
+
+                    item.Platform = Cls_WorkListItem.PlatformType.Bilibili;
+
+                    item.Roomid = Bas.GetJsonValueByKey(jsonstr, "roomInitRes/data/room_id").ToString();
+                    item.RoomStatus = (int)Bas.GetJsonValueByKey(jsonstr, "roomInitRes/data/live_status");
+                    item.RoomTitle = Bas.GetJsonValueByKey(jsonstr, "baseInfoRes/data/title").ToString();
+
+                    if (item.RoomStatus == 1)
+                    {
+                        List<string> Urls = new List<string>();
+                        foreach (Dictionary<string, object> i in (ArrayList)Bas.GetJsonValueByKey(jsonstr, "playUrlRes/data/durl"))
+                        {
+                            Urls.Add(Bas.GetJsonValueByKey(i, "url").ToString());
+                        }
+                        item.VideoUrl = Urls.ToArray();
+                    }
+
+                    item.IsSupportDanmu = true;
+
+                    if (str.Contains("uname"))
+                    {
+                        item.Host = Regex.Split(new Regex("\"uname\":.*,").Match(str).Value, "\"")[3];
+                    }
+                    else
+                    {
+                        string strhost = Bas.GetBody("https://api.live.bilibili.com/live_user/v1/UserInfo/get_anchor_in_room?roomid=" + item.Roomid);
+                        item.Host = Bas.GetJsonValueByKey(strhost, "data/info/uname").ToString();
+                    }
+
+                    item.CallPropertyChanged("RoomInfoLong");
+
+                    return true;
+                }
+                else
+                {
+                    item.Platform = Cls_WorkListItem.PlatformType.None;
+
+                    item.CallPropertyChanged("RoomInfoLong");
+
+                    return false;
+                }
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 获取视频地址
+        /// </summary>
+        /// <param name="URL">直播间地址</param>
+        /// <returns>视频地址集合</returns>
+        public static string[] GetVideoURL(string URL)
+        {
+            string str = Bas.GetBody(URL);
             Regex reg = new Regex("<script>window.__NEPTUNE_IS_MY_WAIFU__={.*}</script>");
             string jsonstr = reg.Match(str).Value;
             jsonstr = Regex.Split(Regex.Split(jsonstr, "window.__NEPTUNE_IS_MY_WAIFU__=")[1], "</script>")[0];
-
-            item.Roomid = Bas.GetJsonValueByKey(jsonstr, "roomInitRes/data/room_id").ToString();
-            switch ((int)Bas.GetJsonValueByKey(jsonstr, "roomInitRes/data/live_status"))
-            {
-                case 1:
-                    item.IsLiving = true;
-                    break;
-
-                default:
-                    item.IsLiving = false;
-                    break;
-            }
-            item.RoomTitle = Bas.GetJsonValueByKey(jsonstr, "baseInfoRes/data/title").ToString();
 
             List<string> Urls = new List<string>();
             foreach (Dictionary<string, object> i in (ArrayList)Bas.GetJsonValueByKey(jsonstr, "playUrlRes/data/durl"))
             {
                 Urls.Add(Bas.GetJsonValueByKey(i, "url").ToString());
             }
-            item.VideoUrl = Urls.ToArray();
-
-            item.IsSupportDanmu = true;
-
-            item.Host = Regex.Split(new Regex("\"uname\":.*,").Match(str).Value, "\"")[3];
-
-            return item;
+            return Urls.ToArray();
         }
 
         /// <summary>
-        /// 获取房间信息
+        /// 查询直播间是否在播
         /// </summary>
         /// <param name="URL">直播间地址</param>
-        /// <returns></returns>
-        public static string GetRoomInfo(string URL)
+        /// <returns>是否在播</returns>
+        public static bool IsLiving(string URL)
         {
             string str = Bas.GetBody(URL);
-            if (!string.IsNullOrEmpty(str))
+            Regex reg = new Regex("<script>window.__NEPTUNE_IS_MY_WAIFU__={.*}</script>");
+            string jsonstr = reg.Match(str).Value;
+            jsonstr = Regex.Split(Regex.Split(jsonstr, "window.__NEPTUNE_IS_MY_WAIFU__=")[1], "</script>")[0];
+            if ((int)Bas.GetJsonValueByKey(jsonstr, "roomInitRes/data/live_status") == 1)
             {
-                Regex reg = new Regex("<script>window.__NEPTUNE_IS_MY_WAIFU__={.*}</script>");
-                string jsonstr = reg.Match(str).Value;
-                jsonstr = Regex.Split(Regex.Split(jsonstr, "window.__NEPTUNE_IS_MY_WAIFU__=")[1], "</script>")[0];
-
-                string livestatus;
-                switch ((int)Bas.GetJsonValueByKey(jsonstr, "roomInitRes/data/live_status"))
-                {
-                    case 1:
-                        livestatus = "在播";
-                        break;
-
-                    default:
-                        livestatus = "离线";
-                        break;
-                }
-
-                return
-                    "房间号：" + Bas.GetJsonValueByKey(jsonstr, "roomInitRes/data/room_id").ToString() + "\r\n" +
-                    "标题：" + Bas.GetJsonValueByKey(jsonstr, "baseInfoRes/data/title").ToString() + "\r\n" +
-                    "主播：" + Regex.Split(new Regex("\"uname\":.*,").Match(str).Value, "\"")[3] + "\r\n" +
-                    "直播状态：" + livestatus + "\r\n" +
-                    "是否支持弹幕录制：支持";
+                return true;
             }
             else
             {
-                return "";
+                return false;
             }
         }
 

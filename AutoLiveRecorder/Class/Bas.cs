@@ -8,8 +8,20 @@ using System.Web.Script.Serialization;
 
 namespace AutoLiveRecorder
 {
+    /// <summary>
+    /// 全局模块
+    /// </summary>
     internal class Bas
     {
+        #region Public Fields
+
+        /// <summary>
+        /// 任务列表
+        /// </summary>
+        public static List<Cls_WorkListItem> TaskList;
+
+        #endregion Public Fields
+
         #region Public Methods
 
         /// <summary>
@@ -17,15 +29,20 @@ namespace AutoLiveRecorder
         /// </summary>
         /// <param name="URL"></param>
         /// <returns></returns>
-        public static string AnalysisURL(string URL)
+        public static void AnalysisURL(string URL, ref Cls_WorkListItem item)
         {
-            if (URL.Length == 0) return "";
+            if (URL.Length == 0) return;
             Regex reg = new Regex("[^\\s]/\\d+");
             if (URL.Contains("live.bilibili.com") && reg.Match(URL).Success)
             {
-                return B_Live.GetRoomInfo(URL);
+                item.URL = URL;
+                B_Live.GetRoomInfo(ref item);
             }
-            return "URL格式错误或平台未支持。";
+            else
+            {
+                item.Platform = Cls_WorkListItem.PlatformType.None;
+                item.CallPropertyChanged("RoomInfoLong");
+            }
         }
 
         /// <summary>
@@ -46,11 +63,10 @@ namespace AutoLiveRecorder
             try
             {
                 HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
-                req.Headers.Add("Origin: https://live.bilibili.com");
+
                 req.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8";
                 req.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36";
 
-                if (roomid != "") req.Referer = "https://live.bilibili.com/" + roomid;
                 HttpWebResponse rep = (HttpWebResponse)req.GetResponse();
                 StreamReader reader = new StreamReader(rep.GetResponseStream());
                 string r = reader.ReadToEnd();
@@ -66,10 +82,62 @@ namespace AutoLiveRecorder
                 }
                 return "";
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return "";
             }
+        }
+
+        /// <summary>
+        /// 获取可用文件名
+        /// </summary>
+        /// <param name="FileName">不带后缀名的文件名</param>
+        /// <param name="ExtName">后缀名</param>
+        /// <param name="Path">目录路径</param>
+        /// <returns>可用文件名（完整路径）</returns>
+        public static string GetFreeFileName(string FileName, string ExtName, string Path)
+        {
+            if (!File.Exists(Path + "\\" + FileName + "." + ExtName)) return Path + "\\" + FileName + "." + ExtName;
+
+            int i = 1;
+
+            while (File.Exists(Path + "\\" + FileName + "-" + i + "." + ExtName))
+            {
+                i++;
+            }
+            return Path + "\\" + FileName + "-" + i + "." + ExtName;
+        }
+
+        /// <summary>
+        /// 获取可用的缓存文件名
+        /// </summary>
+        /// <param name="FileName">最终文件的完整路径</param>
+        /// <returns>可用的缓存文件路径</returns>
+        public static string GetFreeTmpFileName(string FileName)
+        {
+            string[] a = FileName.Split('.');
+            string r = "";
+            for (int i = 0; i < a.Length; i++)
+            {
+                if (i == a.Length - 2)
+                {
+                    r += a[i] + "-{id}.";
+                }
+                else
+                {
+                    r += a[i] + ".";
+                }
+            }
+            r += "tmp";
+
+            int j = 1;
+            string t = r.Replace("{id}", j.ToString());
+            while (File.Exists(t))
+            {
+                j++;
+                t = r.Replace("{id}", j.ToString());
+            }
+            return t;
         }
 
         /// <summary>

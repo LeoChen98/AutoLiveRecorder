@@ -9,7 +9,7 @@ namespace AutoLiveRecorder
     /// </summary>
     public partial class MainWindow : Window
     {
-        #region Public 构造函数
+        #region Public Constructors
 
         /// <summary>
         /// 构造函数
@@ -22,9 +22,9 @@ namespace AutoLiveRecorder
             NotifyIcon.NotifyIcon_Init();
         }
 
-        #endregion Public 构造函数
+        #endregion Public Constructors
 
-        #region Private 方法
+        #region Private Methods
 
         /// <summary>
         /// 添加任务按钮鼠标进入
@@ -53,7 +53,7 @@ namespace AutoLiveRecorder
         /// <param name="e"></param>
         private void Btn_AddTask_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            TaskSettingWindow t = new TaskSettingWindow();
+            TaskSettingWindow t = new TaskSettingWindow(WorkList);
             t.Show();
         }
 
@@ -84,6 +84,7 @@ namespace AutoLiveRecorder
         /// <param name="e"></param>
         private void Btn_AllTaskStart_MouseUp(object sender, MouseButtonEventArgs e)
         {
+            WorkList.AllStart();
         }
 
         /// <summary>
@@ -113,6 +114,7 @@ namespace AutoLiveRecorder
         /// <param name="e"></param>
         private void Btn_AllTaskStop_MouseUp(object sender, MouseButtonEventArgs e)
         {
+            WorkList.AllStop();
         }
 
         /// <summary>
@@ -122,6 +124,7 @@ namespace AutoLiveRecorder
         /// <param name="e"></param>
         private void Btn_CheckUpdate_Click(object sender, RoutedEventArgs e)
         {
+            Update.CheckUpdate();
         }
 
         /// <summary>
@@ -189,7 +192,9 @@ namespace AutoLiveRecorder
             Btn_Menu.Background = new SolidColorBrush(Color.FromArgb(20, 255, 255, 255));
         }
 
-        /// <summary> 菜单按钮鼠标离开 </summary>
+        /// <summary>
+        /// 菜单按钮鼠标离开
+        /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void Btn_Menu_MouseLeave(object sender, MouseEventArgs e)
@@ -264,6 +269,7 @@ namespace AutoLiveRecorder
         /// <param name="e"></param>
         private void Btn_RemoveTask_MouseUp(object sender, MouseButtonEventArgs e)
         {
+            WorkList.RemoveTask();
         }
 
         /// <summary>
@@ -301,6 +307,6 @@ namespace AutoLiveRecorder
             }
         }
 
-        #endregion Private 方法
+        #endregion Private Methods
     }
 }
