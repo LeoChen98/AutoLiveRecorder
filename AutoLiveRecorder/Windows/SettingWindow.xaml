@@ -25,6 +25,7 @@
                     <Label x:Name="lbl_SavePathKey" Margin="0,0,50,0" VerticalContentAlignment="Center" Background="#66FFFFFF" ToolTip="{Binding Content, ElementName=lbl_SavePathKey}" Content="保存路径：" />
                     <Label x:Name="Btn_ShowSavePath" HorizontalAlignment="Right" Width="45" Content="选择" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Background="#66FFFFFF" MouseUp="Btn_ShowSavePath_MouseUp" />
                 </Grid>
+                <Label Margin="10,34.933,132.329,102.725" FontSize="9">*文件名格式：{平台}-{直播间号}-{开始时间}.flv</Label>
                 <CheckBox x:Name="CB_IsAutoStart" HorizontalAlignment="Left" Height="14.8" VerticalAlignment="Top" Width="73.6" Margin="10,39.933,0,0" VerticalContentAlignment="Center" Visibility="Hidden">开机自启</CheckBox>
                 <CheckBox x:Name="CB_IsNoticeShow" HorizontalAlignment="Left" Height="14.8" VerticalAlignment="Top" Width="73.6" Margin="10,59.733,0,0" VerticalContentAlignment="Center" IsChecked="True" Click="CB_IsNoticeShow_Click">开启通知</CheckBox>
                 <Grid x:Name="NoticeGrid" Margin="88.6,59.733,116,0" Height="14.8" VerticalAlignment="Top">

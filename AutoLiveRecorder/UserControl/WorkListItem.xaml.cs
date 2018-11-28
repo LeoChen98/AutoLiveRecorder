@@ -50,6 +50,14 @@ namespace AutoLiveRecorder
                 Path = new System.Windows.PropertyPath("StatusString")
             };
             BindingOperations.SetBinding(lbl_TaskStatus, ContentProperty, bindStatus);
+
+            //Binding bindStatuscolor = new Binding
+            //{
+            //    Source = Item,
+            //    Mode = BindingMode.OneWay,
+            //    Path = new System.Windows.PropertyPath("StatusColor")
+            //};
+            //BindingOperations.SetBinding(lbl_TaskStatus, ForegroundProperty, bindStatuscolor);
         }
 
         #endregion Public Constructors
@@ -68,8 +76,15 @@ namespace AutoLiveRecorder
 
         private void Btn_Setting_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            TaskSettingWindow t = new TaskSettingWindow(Item, Parent);
-            t.Show();
+            if (Item.Status != Cls_WorkListItem.StatusCode.Recording)
+            {
+                TaskSettingWindow t = new TaskSettingWindow(Item, Parent);
+                t.Show();
+            }
+            else
+            {
+                System.Windows.Forms.MessageBox.Show("录制进行中，请先结束录制。");
+            }
         }
 
         private void Btn_Start_MouseEnter(object sender, MouseEventArgs e)

@@ -38,6 +38,7 @@
                     <Label x:Name="Btn_RemoveTask" HorizontalAlignment="Left" Width="60" Margin="65,0,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MouseEnter="Btn_RemoveTask_MouseEnter" MouseLeave="Btn_RemoveTask_MouseLeave" MouseUp="Btn_RemoveTask_MouseUp" Content="删除任务" />
                     <Label x:Name="Btn_AllTaskStart" HorizontalAlignment="Left" Width="60" Margin="130,0,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MouseEnter="Btn_AllTaskStart_MouseEnter" MouseLeave="Btn_AllTaskStart_MouseLeave" MouseUp="Btn_AllTaskStart_MouseUp" Content="全部开始" />
                     <Label x:Name="Btn_AllTaskStop" HorizontalAlignment="Left" Width="60" Margin="195,0,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MouseEnter="Btn_AllTaskStop_MouseEnter" MouseLeave="Btn_AllTaskStop_MouseLeave" MouseUp="Btn_AllTaskStop_MouseUp" Content="全部停止" />
+                    <Label x:Name="lbl_Notice" Margin="260,1.6,170.306,0" VerticalContentAlignment="Center" Visibility="Hidden">温馨提示：“全部开始”按钮只对启动条件为“手动”的任务有效</Label>
                 </Grid>
                 <local:WorkList x:Name="WorkList" Height="Auto" Margin="0,37.16,0,0" Width="Auto" />
             </Grid>

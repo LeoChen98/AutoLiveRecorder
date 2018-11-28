@@ -12,17 +12,15 @@
 ## 简述
 * 本程序是直播录播软件，原理为扒流，通过极小的占用完成录播工作，无需打开直播页面也无需留守。目前只支持B站直播。
 
+
 ## 安装和使用
 * 本软件无需安装，下载后即可使用。
-* 使用时设定房间号和保存路径即可开始录制。
-* “录制预位”功能：激活后将待机等待直播间开播，开播后即开始录制。
+
 
 ## 下载地址
-[![Downloads](https://img.shields.io/badge/%E4%B8%8B%E8%BD%BD%E8%BD%AF%E4%BB%B6@1.0.2.16-35K-brightgreen.svg)](http://update.zhangbudademao.com/112/AutoLiveRecorder.exe)
-[![DownloadsWithffmpeg](https://img.shields.io/badge/%E4%B8%8B%E8%BD%BD%E8%BD%AF%E4%BB%B6%EF%BC%88%E5%8C%85%E5%90%ABffmpeg%EF%BC%89@1.0.2.16-19.8M-brightgreen.svg)](http://downloads.zhangbudademao.com/software/112/AutoLiveRecorder_1_0_2_16_full.zip)
+[![Downloads](https://img.shields.io/badge/%E4%B8%8B%E8%BD%BD%E8%BD%AF%E4%BB%B6@2.0.0.17-482K-brightgreen.svg)](https://github.com/LeoChen98/AutoLiveRecorder/releases/download/2.0.0.17/AutoLiveRecorder.exe)
 [![PassedDownloads](https://img.shields.io/badge/%E8%BF%87%E5%BE%80%E7%89%88%E6%9C%AC-release-blue.svg)](https://github.com/LeoChen98/AutoLiveRecorder/releases)  
 
 ## 开发计划
 * 即将加入命令行启动功能，以便使用计划任务的方式启动。
-* 将基于PHP开发服务器拓展插件。
-* 后续将支持其他平台。
+* 将开发服务器拓展插件。

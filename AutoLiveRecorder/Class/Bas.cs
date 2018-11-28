@@ -50,6 +50,14 @@ namespace AutoLiveRecorder
         /// </summary>
         public static void Exit()
         {
+            foreach (Cls_WorkListItem i in TaskList)
+            {
+                if (i.Status == Cls_WorkListItem.StatusCode.Arranging || i.Status == Cls_WorkListItem.StatusCode.Recording || i.Status == Cls_WorkListItem.StatusCode.Translating)
+                {
+                    System.Windows.Forms.MessageBox.Show("你有任务正在进行，请结束所有任务后退出程序，或最小化本程序到托盘等待任务结束。");
+                    return;
+                }
+            }
             Environment.Exit(0);
         }
 

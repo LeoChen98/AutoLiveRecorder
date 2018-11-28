@@ -12,7 +12,7 @@
             <Label x:Name="lbl_RoomTitle" Content="[RoomTitle]" Margin="10,0,10,18.45" FontSize="13.333" ToolTip="{Binding Content, ElementName=lbl_RoomTitle}" />
             <Label x:Name="lbl_RoomInfo" Content="[Host]·[RoomId]·[Platform]" Margin="10,18.45,10,0" Foreground="#FF5F5F5F" ToolTip="{Binding Content, ElementName=lbl_RoomInfo}" />
         </Grid>
-        <Label x:Name="lbl_TaskStatus" Content="[Status]" HorizontalAlignment="Right" Margin="0,11.363,189.4,14" Width="114.94" ToolTip="{Binding Content, ElementName=lbl_TaskStatus}" />
+        <Label x:Name="lbl_TaskStatus" Content="[Status]" HorizontalAlignment="Right" Margin="0,11.363,189.4,14" Width="114.94" ToolTip="{Binding Content, ElementName=lbl_TaskStatus}" Foreground="Black" />
         <Grid HorizontalAlignment="Right" Margin="0,11.363,10,14" Width="174.4" x:Name="CommandGrid">
             <Label x:Name="Btn_Start" Content="开始" HorizontalAlignment="Left" Width="54.8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MouseUp="Btn_Start_MouseUp" MouseEnter="Btn_Start_MouseEnter" MouseLeave="Btn_Start_MouseLeave" Background="{x:Null}" />
             <Label x:Name="Btn_Stop" Content="停止" Margin="59.8,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MouseUp="Btn_Stop_MouseUp" MouseEnter="Btn_Stop_MouseEnter" MouseLeave="Btn_Stop_MouseLeave" />

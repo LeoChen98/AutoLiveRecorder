@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.IO;
+using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -16,6 +17,11 @@ namespace AutoLiveRecorder
         /// </summary>
         public MainWindow()
         {
+            if (File.Exists("update.tmp"))
+            {
+                Update.DoUpdate();
+            }
+
             InitializeComponent();
 
             //初始化托盘图标
@@ -65,6 +71,7 @@ namespace AutoLiveRecorder
         private void Btn_AllTaskStart_MouseEnter(object sender, MouseEventArgs e)
         {
             Btn_AllTaskStart.Background = new SolidColorBrush(Color.FromArgb(60, 255, 255, 255));
+            lbl_Notice.Visibility = Visibility.Visible;
         }
 
         /// <summary>
@@ -75,6 +82,7 @@ namespace AutoLiveRecorder
         private void Btn_AllTaskStart_MouseLeave(object sender, MouseEventArgs e)
         {
             Btn_AllTaskStart.Background = null;
+            lbl_Notice.Visibility = Visibility.Hidden;
         }
 
         /// <summary>

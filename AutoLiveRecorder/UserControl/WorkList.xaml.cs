@@ -49,6 +49,13 @@ namespace AutoLiveRecorder
         /// </summary>
         public void AllStart()
         {
+            foreach (Cls_WorkListItem i in Bas.TaskList)
+            {
+                if (i.StartMode == Cls_WorkListItem.StartModeType.Manuel)
+                {
+                    i.StartRecord();
+                }
+            }
         }
 
         /// <summary>
@@ -56,6 +63,10 @@ namespace AutoLiveRecorder
         /// </summary>
         public void AllStop()
         {
+            foreach (Cls_WorkListItem i in Bas.TaskList)
+            {
+                i.StopRecord();
+            }
         }
 
         /// <summary>

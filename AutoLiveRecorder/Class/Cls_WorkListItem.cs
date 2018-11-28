@@ -26,6 +26,8 @@ namespace AutoLiveRecorder
 
         private string _URL;
 
+        private WebClient client;
+
         /// <summary>
         /// 保存文件名
         /// </summary>
@@ -46,7 +48,10 @@ namespace AutoLiveRecorder
         /// </summary>
         private Thread Recorder;
 
+        private Stream stream;
         private List<string> tmpFileList = new List<string>();
+
+        private FileStream writer;
 
         #endregion Private Fields
 
@@ -158,9 +163,19 @@ namespace AutoLiveRecorder
             Recording = 1,
 
             /// <summary>
+            /// 整理中
+            /// </summary>
+            Arranging = 2,
+
+            /// <summary>
+            /// 转码中
+            /// </summary>
+            Translating = 3,
+
+            /// <summary>
             /// 完成
             /// </summary>
-            Finished = 2,
+            Finished = 4,
 
             /// <summary>
             /// 出错
@@ -267,6 +282,36 @@ namespace AutoLiveRecorder
         }
 
         /// <summary>
+        /// 平台名字符串
+        /// </summary>
+        public string PlatformString
+        {
+            get
+            {
+                switch (Platform)
+                {
+                    case PlatformType.Bilibili:
+                        return
+                            "B站";
+
+                    case PlatformType.Douyu:
+                        return
+                           "斗鱼";
+
+                    case PlatformType.Huya:
+                        return
+                           "虎牙";
+
+                    case PlatformType.Panda:
+                        return
+                            "熊猫TV";
+                    default:
+                        return "";
+                }
+            }
+        }
+
+        /// <summary>
         /// 房间号
         /// </summary>
         public string Roomid
@@ -353,7 +398,7 @@ namespace AutoLiveRecorder
 
                         case PlatformType.Huya:
                             return
-                               "平台：斗鱼" + "\r\n" +
+                               "平台：虎牙" + "\r\n" +
                                "房间号：" + Roomid + "\r\n" +
                                "标题：" + RoomTitle + "\r\n" +
                                "主播：" + Host + "\r\n" +
@@ -362,7 +407,7 @@ namespace AutoLiveRecorder
 
                         case PlatformType.Panda:
                             return
-                                "平台：斗鱼" + "\r\n" +
+                                "平台：熊猫TV" + "\r\n" +
                                 "房间号：" + Roomid + "\r\n" +
                                 "标题：" + RoomTitle + "\r\n" +
                                 "主播：" + Host + "\r\n" +
@@ -426,6 +471,36 @@ namespace AutoLiveRecorder
             {
                 _Status = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("StatusString"));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("StatusColor"));
+            }
+        }
+
+        /// <summary>
+        /// 指示任务状态显示的颜色
+        /// </summary>
+        public System.Windows.Media.SolidColorBrush StatusColor
+        {
+            get
+            {
+                switch (Status)
+                {
+                    case StatusCode.Waiting:
+                        return new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 0, 0, 0));
+
+                    case StatusCode.Recording:
+                    case StatusCode.Translating:
+                    case StatusCode.Arranging:
+                        return new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 255, 202, 0));
+
+                    case StatusCode.Finished:
+                        return new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 0, 255, 0));
+
+                    case StatusCode.Error:
+                        return new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 255, 0, 0));
+
+                    default:
+                        return new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromArgb(255, 0, 0, 0));
+                }
             }
         }
 
@@ -446,6 +521,12 @@ namespace AutoLiveRecorder
 
                     case StatusCode.Finished:
                         return "已完成";
+
+                    case StatusCode.Arranging:
+                        return "整理中";
+
+                    case StatusCode.Translating:
+                        return "转码中";
 
                     case StatusCode.Error:
                         return "出错了";
@@ -531,7 +612,7 @@ namespace AutoLiveRecorder
                         {
                             StartMode = StartModeType.WhenStart;
                             MyTimer.Change(1000, 1000);
-                            if (IsManuelStart) System.Windows.Forms.MessageBox.Show("直播未开始，任务将切换至“直播开始时开始录制”模式。");
+                            if (IsManuelStart) System.Windows.Forms.MessageBox.Show("直播未开始，任务已切换至“直播开始时开始录制”模式。");
                             return;
                         }
                         break;
@@ -578,14 +659,7 @@ namespace AutoLiveRecorder
         /// <param name="FileName">文件路径</param>
         private void ArrangeFile()
         {
-            if (tmpFileList.Count > 1)
-            {
-                FlvMerge.Merge(tmpFileList, FileName);
-            }
-            else
-            {
-                File.Copy(tmpFileList[0], FileName);
-            }
+            FlvMerge.Merge(tmpFileList, FileName);
             foreach (string i in tmpFileList)
             {
                 if (File.Exists(i))
@@ -594,6 +668,10 @@ namespace AutoLiveRecorder
                 }
             }
             tmpFileList.Clear();
+            if (StartMode == StartModeType.WhenStart || (StartMode == StartModeType.WhenTime && !Frequency.Contains("仅一次")))
+                Status = StatusCode.Waiting;
+            else
+                Status = StatusCode.Finished;
         }
 
         /// <summary>
@@ -603,45 +681,45 @@ namespace AutoLiveRecorder
         {
             try
             {
-                using (WebClient client = new WebClient())
+                client = new WebClient();
+
+                stream = client.OpenRead(new Uri(VideoUrl[0]));
+
+                if (!Directory.Exists(Properties.Settings.Default.SavePath)) Directory.CreateDirectory(Properties.Settings.Default.SavePath);
+                FileName = Bas.GetFreeFileName(PlatformString + "-" + Roomid + "-" + DateTime.Now.Year + "-" + DateTime.Now.Month + "-" + DateTime.Now.Day + " " + DateTime.Now.Hour + "-" + DateTime.Now.Minute + "-" + DateTime.Now.Second, "flv", Properties.Settings.Default.SavePath);
+                string tmpFileName = Bas.GetFreeTmpFileName(FileName);
+                tmpFileList.Add(tmpFileName);
+                writer = new FileStream(tmpFileName, FileMode.Create);
+
+                byte[] mbyte = new byte[1024];
+                int readL = stream.Read(mbyte, 0, 1024);
+                while (readL != 0 && !IsRecorderAbortRequested)
                 {
-                    using (Stream stream = client.OpenRead(new Uri(VideoUrl[0])))
-                    {
-                        if (!Directory.Exists(Properties.Settings.Default.SavePath)) Directory.CreateDirectory(Properties.Settings.Default.SavePath);
-                        FileName = Bas.GetFreeFileName(Roomid + "-" + DateTime.Now.Year + "-" + DateTime.Now.Month + "-" + DateTime.Now.Day + " " + DateTime.Now.Hour + "-" + DateTime.Now.Minute + "-" + DateTime.Now.Second, "flv", Properties.Settings.Default.SavePath);
-                        string tmpFileName = Bas.GetFreeTmpFileName(FileName);
-                        tmpFileList.Add(tmpFileName);
-                        using (FileStream writer = new FileStream(tmpFileName, FileMode.Create))
-                        {
-                            byte[] mbyte = new byte[1024];
-                            int readL = stream.Read(mbyte, 0, 1024);
-                            while (readL != 0 && !IsRecorderAbortRequested)
-                            {
-                                writer.Write(mbyte, 0, readL);//写文件
-                                readL = stream.Read(mbyte, 0, 1024);//读流
-                            }
-                            writer.Close();
-                            if (IsLiving() && !IsRecorderAbortRequested) DoRecord(FileName);
-                            else
-                            {
-                                ArrangeFile();
-                                if (StartMode == StartModeType.WhenStart || (StartMode == StartModeType.WhenTime && !Frequency.Contains("仅一次")))
-                                    Status = StatusCode.Waiting;
-                                else
-                                    Status = StatusCode.Finished;
-                            }
-                        }
-                    }
+                    writer.Write(mbyte, 0, readL);//写文件
+                    readL = stream.Read(mbyte, 0, 1024);//读流
                 }
-            }
-            catch (Exception ex)
-            {
-                ArrangeFile();
                 if (IsLiving() && !IsRecorderAbortRequested) DoRecord(FileName);
                 else
                 {
-                    Status = StatusCode.Error;
+                    Status = StatusCode.Arranging;
                 }
+            }
+            catch
+            {
+                if (IsLiving() && !IsRecorderAbortRequested) DoRecord(FileName);
+                else
+                {
+                    Status = StatusCode.Arranging;
+                }
+            }
+            finally
+            {
+                //关闭连接
+                client.Dispose();
+                //关闭文件
+                writer.Close();
+                //整理文件
+                ArrangeFile();
             }
         }
 
@@ -653,43 +731,43 @@ namespace AutoLiveRecorder
         {
             try
             {
-                using (WebClient client = new WebClient())
+                client = new WebClient();
+
+                stream = client.OpenRead(new Uri(VideoUrl[0]));
+
+                string tmpFileName = Bas.GetFreeTmpFileName(FileName);
+                tmpFileList.Add(tmpFileName);
+                writer = new FileStream(tmpFileName, FileMode.Create);
+
+                byte[] mbyte = new byte[1024];
+                int readL = stream.Read(mbyte, 0, 1024);
+                while (readL != 0 && !IsRecorderAbortRequested)
                 {
-                    using (Stream stream = client.OpenRead(new Uri(VideoUrl[0])))
-                    {
-                        string tmpFileName = Bas.GetFreeTmpFileName(FileName);
-                        tmpFileList.Add(tmpFileName);
-                        using (FileStream writer = new FileStream(tmpFileName, FileMode.Create))
-                        {
-                            byte[] mbyte = new byte[1024];
-                            int readL = stream.Read(mbyte, 0, 1024);
-                            while (readL != 0 && !IsRecorderAbortRequested)
-                            {
-                                writer.Write(mbyte, 0, readL);//写文件
-                                readL = stream.Read(mbyte, 0, 1024);//读流
-                            }
-                            writer.Close();
-                            if (IsLiving() && !IsRecorderAbortRequested) DoRecord();
-                            else
-                            {
-                                ArrangeFile();
-                                if (StartMode == StartModeType.WhenStart || (StartMode == StartModeType.WhenTime && !Frequency.Contains("仅一次")))
-                                    Status = StatusCode.Waiting;
-                                else
-                                    Status = StatusCode.Finished;
-                            }
-                        }
-                    }
+                    writer.Write(mbyte, 0, readL);//写文件
+                    readL = stream.Read(mbyte, 0, 1024);//读流
+                }
+                if (IsLiving() && !IsRecorderAbortRequested) DoRecord(FileName);
+                else
+                {
+                    Status = StatusCode.Arranging;
                 }
             }
             catch
             {
-                ArrangeFile();
-                if (IsLiving() && !IsRecorderAbortRequested) DoRecord();
+                if (IsLiving() && !IsRecorderAbortRequested) DoRecord(FileName);
                 else
                 {
-                    Status = StatusCode.Error;
+                    Status = StatusCode.Arranging;
                 }
+            }
+            finally
+            {
+                //关闭连接
+                client.Dispose();
+                //关闭文件
+                writer.Close();
+                //整理文件
+                ArrangeFile();
             }
         }
 

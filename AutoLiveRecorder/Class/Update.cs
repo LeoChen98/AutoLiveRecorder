@@ -74,15 +74,19 @@ namespace AutoLiveRecorder
             }
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
         /// <summary>
         /// 执行更新
         /// </summary>
-        private static void DoUpdate()
+        public static void DoUpdate()
         {
+            foreach (Cls_WorkListItem i in Bas.TaskList)
+            {
+                if (i.Status == Cls_WorkListItem.StatusCode.Arranging || i.Status == Cls_WorkListItem.StatusCode.Recording || i.Status == Cls_WorkListItem.StatusCode.Translating)
+                {
+                    MessageBox.Show("你有任务在进行，更新程序将在主程序下次启动时应用更新。");
+                    return;
+                }
+            }
             File.WriteAllText(Application.StartupPath + "\\update.bat", "@echo off\r\n" +
                                     "choice /t 5 /d y /n >nul\r\n" +                                                                                   //等待5s开始
                                     "copy /y /b \"" + Application.StartupPath + "\\update.tmp" + "\" \"" + Application.ExecutablePath + "\"\r\n" +     //覆盖程序
@@ -97,6 +101,10 @@ namespace AutoLiveRecorder
             p.Start();
             Environment.Exit(2);
         }
+
+        #endregion Public Methods
+
+        #region Private Methods
 
         /// <summary>
         /// 获得更新内容
