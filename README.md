@@ -18,7 +18,7 @@
 
 
 ## 下载地址
-[![Downloads](https://img.shields.io/badge/%E4%B8%8B%E8%BD%BD%E8%BD%AF%E4%BB%B6@2.0.1.18-484K-brightgreen.svg)](https://github.com/LeoChen98/AutoLiveRecorder/releases/download/2.0.1.18/AutoLiveRecorder.exe)
+[![Downloads](https://img.shields.io/badge/%E4%B8%8B%E8%BD%BD%E8%BD%AF%E4%BB%B6@2.0.2.19-484K-brightgreen.svg)](https://github.com/LeoChen98/AutoLiveRecorder/releases/download/2.0.2.19/AutoLiveRecorder.exe)
 [![PassedDownloads](https://img.shields.io/badge/%E8%BF%87%E5%BE%80%E7%89%88%E6%9C%AC-release-blue.svg)](https://github.com/LeoChen98/AutoLiveRecorder/releases)  
 
 ## 开发计划

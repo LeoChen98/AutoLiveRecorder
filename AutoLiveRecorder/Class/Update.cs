@@ -126,7 +126,7 @@ namespace AutoLiveRecorder
                 {
                     liststr += (j + 1).ToString() + "." + mc[j].Groups[2].Value + "\r\n";
                 }
-                liststr = liststr.Substring(0, liststr.Length - 2);
+                //liststr = liststr.Substring(0, liststr.Length - 2);
                 str = str.Replace(i.Value, liststr);
             }
 
