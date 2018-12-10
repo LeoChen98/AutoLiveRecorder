@@ -17,6 +17,7 @@ namespace AutoLiveRecorder
         private string _Frequency;
         private string _Host;
         private bool _IsRecordDanmu;
+        private bool _IsRepeat;
         private bool _IsTranslateAfterCompleted;
         private PlatformType _Platform;
         private string _Roomid;
@@ -75,14 +76,6 @@ namespace AutoLiveRecorder
 
         #region Public Enums
 
-        ///// <summary>
-        ///// 通过房间号构建
-        ///// </summary>
-        ///// <param name="Roomid">房间号</param>
-        ///// <param name="platform">平台</param>
-        //public Cls_WorkListItem(string Roomid, PlatformType platform)
-        //{
-        //}
         /// <summary>
         /// 平台枚举
         /// </summary>
@@ -114,13 +107,6 @@ namespace AutoLiveRecorder
             Panda = 4
         }
 
-        ///// <summary>
-        ///// 通过直播间地址构建
-        ///// </summary>
-        ///// <param name="URL">直播间地址</param>
-        //public Cls_WorkListItem(string URL)
-        //{
-        //}
         /// <summary>
         /// 开始条件枚举
         /// </summary>
@@ -244,6 +230,19 @@ namespace AutoLiveRecorder
             {
                 _IsRecordDanmu = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsRecordDanmu"));
+            }
+        }
+
+        public bool IsRepeat
+        {
+            get
+            {
+                return _IsRepeat;
+            }
+            set
+            {
+                _IsRepeat = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsRepeat"));
             }
         }
 
@@ -668,7 +667,7 @@ namespace AutoLiveRecorder
                 }
             }
             tmpFileList.Clear();
-            if (StartMode == StartModeType.WhenStart || (StartMode == StartModeType.WhenTime && !Frequency.Contains("仅一次")))
+            if (StartMode == StartModeType.WhenStart || (StartMode == StartModeType.WhenStart && IsRepeat) || (StartMode == StartModeType.WhenTime && !Frequency.Contains("仅一次")))
                 Status = StatusCode.Waiting;
             else
                 Status = StatusCode.Finished;
@@ -772,6 +771,40 @@ namespace AutoLiveRecorder
         }
 
         /// <summary>
+        /// 获取当前日期星期
+        /// </summary>
+        /// <returns></returns>
+        private string GetTodayDay()
+        {
+            switch (DateTime.Now.DayOfWeek)
+            {
+                case DayOfWeek.Sunday:
+                    return "日";
+
+                case DayOfWeek.Monday:
+                    return "一";
+
+                case DayOfWeek.Tuesday:
+                    return "二";
+
+                case DayOfWeek.Wednesday:
+                    return "三";
+
+                case DayOfWeek.Thursday:
+                    return "四";
+
+                case DayOfWeek.Friday:
+                    return "五";
+
+                case DayOfWeek.Saturday:
+                    return "六";
+
+                default:
+                    return "";
+            }
+        }
+
+        /// <summary>
         /// 是否在播查询
         /// </summary>
         /// <returns>是否在播</returns>
@@ -834,38 +867,7 @@ namespace AutoLiveRecorder
                         break;
 
                     case StartModeType.WhenTime:
-                        string DayOfWeekString = "";
-
-                        switch (DateTime.Now.DayOfWeek)
-                        {
-                            case DayOfWeek.Sunday:
-                                DayOfWeekString = "日";
-                                break;
-
-                            case DayOfWeek.Monday:
-                                DayOfWeekString = "一";
-                                break;
-
-                            case DayOfWeek.Tuesday:
-                                DayOfWeekString = "二";
-                                break;
-
-                            case DayOfWeek.Wednesday:
-                                DayOfWeekString = "三";
-                                break;
-
-                            case DayOfWeek.Thursday:
-                                DayOfWeekString = "四";
-                                break;
-
-                            case DayOfWeek.Friday:
-                                DayOfWeekString = "五";
-                                break;
-
-                            case DayOfWeek.Saturday:
-                                DayOfWeekString = "六";
-                                break;
-                        }
+                        string DayOfWeekString = GetTodayDay();
 
                         if (Frequency.Contains("每天") || Frequency.Contains(DayOfWeekString) || (Frequency.Contains("仅一次") && Status == StatusCode.Waiting))
                         {

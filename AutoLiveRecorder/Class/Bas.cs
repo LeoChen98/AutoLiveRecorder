@@ -11,7 +11,7 @@ namespace AutoLiveRecorder
     /// <summary>
     /// 全局模块
     /// </summary>
-    internal class Bas
+    public class Bas
     {
         #region Public Fields
 

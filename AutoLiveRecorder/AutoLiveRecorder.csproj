@@ -67,7 +67,8 @@
     <Compile Include="Class\Cls_WorkListItem.cs" />
     <Compile Include="Class\DependencyProperties.cs" />
     <Compile Include="Class\Update.cs" />
-    <Compile Include="FLVMerge.cs" />
+    <Compile Include="Class\FLVMerge.cs" />
+    <Compile Include="Class\ViewModelForAboutWindow.cs" />
     <Compile Include="Windows\AboutWindow.xaml.cs">
       <DependentUpon>AboutWindow.xaml</DependentUpon>
     </Compile>

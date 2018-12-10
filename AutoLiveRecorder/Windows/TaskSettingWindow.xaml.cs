@@ -119,6 +119,7 @@ namespace AutoLiveRecorder
                         Item.StartMode = Cls_WorkListItem.StartModeType.Manuel;
                     else if ((bool)RB_StartWhenTime.IsChecked)
                         Item.StartMode = Cls_WorkListItem.StartModeType.WhenTime;
+                    Item.IsRepeat = (bool)CB_IsRepeat.IsChecked;
 
                     if (IsNew)
                     {
@@ -171,6 +172,18 @@ namespace AutoLiveRecorder
             t.ShowDialog();
         }
 
+        private void RB_StartWhenLiveStart_Click(object sender, RoutedEventArgs e)
+        {
+            if ((bool)RB_StartWhenLiveStart.IsChecked)
+            {
+                CB_IsRepeat.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                CB_IsRepeat.Visibility = Visibility.Hidden;
+            }
+        }
+
         /// <summary>
         /// 设置数据绑定
         /// </summary>
@@ -214,6 +227,14 @@ namespace AutoLiveRecorder
                 Path = new PropertyPath("URL")
             };
             BindingOperations.SetBinding(TB_URL, System.Windows.Controls.TextBox.TextProperty, bindURL);
+
+            Binding bindIsRepeat = new Binding
+            {
+                Source = Item,
+                Mode = BindingMode.OneWay,
+                Path = new PropertyPath("IsRepeat")
+            };
+            BindingOperations.SetBinding(CB_IsRepeat, DependencyProperties.IsChecked, bindIsRepeat);
         }
 
         private void TB_URL_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)

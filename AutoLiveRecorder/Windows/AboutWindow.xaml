@@ -6,6 +6,9 @@
         xmlns:local="clr-namespace:AutoLiveRecorder"
         mc:Ignorable="d"
         Title="AboutWindow" Height="175" Width="400" WindowStyle="None" AllowsTransparency="True" Background="{x:Null}" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize">
+    <Window.Resources>
+        <local:ViewModelForAboutWindow x:Key="VM"></local:ViewModelForAboutWindow>
+    </Window.Resources>
     <Border CornerRadius="20">
         <Border.Background>
             <ImageBrush ImageSource="/bg.jpg" />
@@ -19,7 +22,7 @@
                 <Label x:Name="Btn_Close" Height="34.4" Margin="0,10,10,0" VerticalAlignment="Top" FontSize="16" Foreground="Black" HorizontalAlignment="Right" Width="34.4" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" MouseUp="Btn_Close_MouseUp" MouseEnter="Btn_Close_MouseEnter" MouseLeave="Btn_Close_MouseLeave"  ToolTip="关闭" Content="×" />
             </Grid>
             <Grid Height="115.934" Margin="10,0,10,-115.934" VerticalAlignment="Bottom" x:Name="ContentGrid">
-                <Label x:Name="lbl_Version" HorizontalAlignment="Left" Height="26.867" VerticalAlignment="Top" Width="138.4" Margin="10,0,0,0" VerticalContentAlignment="Center" Content="程序版本：xx.xx.xx.xxx" />
+                <Label x:Name="lbl_Version" HorizontalAlignment="Left" Height="26.867" VerticalAlignment="Top" Width="138.4" Margin="10,0,0,0" VerticalContentAlignment="Center" Content="{Binding VerString, Mode=OneWay, Source={StaticResource VM}}" />
                 <Grid Height="26.867" Margin="148.666,0,171.334,0" VerticalAlignment="Top" x:Name="Btn_CheckUpdate"  Cursor="Hand" MouseUp="Btn_CheckUpdate_MouseUp">
                     <Label x:Name="lbl_CheckUpdate" Width="60" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="#FF5669F1" Content="检查更新" />
                     <Rectangle Fill="#FF5669F1" Height="1" Margin="4.734,0,5.266,5" Stroke="Black" VerticalAlignment="Bottom" StrokeThickness="0" />

@@ -24,8 +24,7 @@ namespace AutoLiveRecorder
 
             InitializeComponent();
 
-            //初始化托盘图标
-            NotifyIcon.NotifyIcon_Init();
+            Application.Current.MainWindow = this;
         }
 
         #endregion Public Constructors
@@ -313,6 +312,12 @@ namespace AutoLiveRecorder
             {
                 DragMove();
             }
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            //初始化托盘图标
+            NotifyIcon.NotifyIcon_Init();
         }
 
         #endregion Private Methods
