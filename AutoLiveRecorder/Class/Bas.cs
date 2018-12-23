@@ -234,6 +234,9 @@ namespace AutoLiveRecorder
             }
         }
 
+        /// <summary>
+        /// 读取任务列表
+        /// </summary>
         public static void LoadTasks()
         {
             if (File.Exists("tasks.txt"))
@@ -272,6 +275,9 @@ namespace AutoLiveRecorder
             }
         }
 
+        /// <summary>
+        /// 保存任务列表
+        /// </summary>
         public static void SaveTasks()
         {
             DataContractJsonSerializer jser = new DataContractJsonSerializer(TaskList.GetType());
