@@ -239,9 +239,9 @@ namespace AutoLiveRecorder
         /// </summary>
         public static void LoadTasks()
         {
-            if (File.Exists("tasks.txt"))
+            if (File.Exists(Properties.Settings.Default.SavePath + "\\tasks.json"))
             {
-                FileStream fs = new FileStream(Properties.Settings.Default.SavePath + "\tasks.json", FileMode.Open);
+                FileStream fs = new FileStream(Properties.Settings.Default.SavePath + "\\tasks.json", FileMode.Open);
                 StreamReader reader = new StreamReader(fs);
                 string json = reader.ReadToEnd();
                 fs.Close();
@@ -289,7 +289,7 @@ namespace AutoLiveRecorder
                 string json = sb.ToString();
                 json = "{\"tasks\":" + json + "}";
                 byte[] bjson = Encoding.UTF8.GetBytes(json);
-                FileStream fs = File.Open(Properties.Settings.Default.SavePath + "\tasks.json", FileMode.OpenOrCreate);
+                FileStream fs = File.Open(Properties.Settings.Default.SavePath + "\\tasks.json", FileMode.OpenOrCreate);
                 fs.Write(bjson, 0, bjson.Length);
                 fs.Close();
             }
