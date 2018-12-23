@@ -289,7 +289,7 @@ namespace AutoLiveRecorder
                 string json = sb.ToString();
                 json = "{\"tasks\":" + json + "}";
                 byte[] bjson = Encoding.UTF8.GetBytes(json);
-                FileStream fs = File.Open(Properties.Settings.Default.SavePath + "\\tasks.json", FileMode.OpenOrCreate);
+                FileStream fs = File.Open(Properties.Settings.Default.SavePath + "\\tasks.json", FileMode.Create);
                 fs.Write(bjson, 0, bjson.Length);
                 fs.Close();
             }
