@@ -40,6 +40,6 @@ using System.Windows;
 // 主版本 次版本 生成号 修订号
 //
 // 可以指定所有值，也可以使用以下所示的 "*" 预置版本号和修订号 方法是按如下所示使用“*”: : [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("2.0.2.19")]
-[assembly: AssemblyFileVersion("2.0.2.19")]
+[assembly: AssemblyVersion("2.0.3.20")]
+[assembly: AssemblyFileVersion("2.0.3.20")]
 [assembly: Guid("b3481a0e-1d11-4a78-a059-64bb9dd7f1c0")]
