@@ -3,8 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Runtime.Serialization.Json;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Web.Script.Serialization;
+using System.Windows;
 
 namespace AutoLiveRecorder
 {
@@ -58,6 +61,7 @@ namespace AutoLiveRecorder
                     return;
                 }
             }
+            SaveTasks();
             Environment.Exit(0);
         }
 
@@ -163,7 +167,7 @@ namespace AutoLiveRecorder
             Dictionary<string, object> p = serializer.Deserialize<Dictionary<string, object>>(JsonStr);
             if (p.ContainsKey(Key))
             {
-                if (p[Key].GetType() == typeof(ArrayList) && step < TolStep - 1)
+                if (p[Key]?.GetType() == typeof(ArrayList) && step < TolStep - 1)
                 {
                     ArrayList al = (ArrayList)p[Key];
                     List<object> results = new List<object>();
@@ -174,7 +178,7 @@ namespace AutoLiveRecorder
                     return results;
                 }
                 else
-                if (p[Key].GetType() == typeof(Dictionary<string, object>) && step < TolStep - 1)
+                if (p[Key]?.GetType() == typeof(Dictionary<string, object>) && step < TolStep - 1)
                 {
                     Dictionary<string, object> di = (Dictionary<string, object>)p[Key];
                     return GetJsonValueByKey(di, Keys, step + 1);
@@ -203,7 +207,7 @@ namespace AutoLiveRecorder
             int TolStep = Keys.Split('/').Length;
             if (JsonObject.ContainsKey(Key))
             {
-                if (JsonObject[Key].GetType() == typeof(ArrayList) && step < TolStep - 1)
+                if (JsonObject[Key]?.GetType() == typeof(ArrayList) && step < TolStep - 1)
                 {
                     ArrayList al = (ArrayList)JsonObject[Key];
                     List<object> results = new List<object>();
@@ -214,7 +218,7 @@ namespace AutoLiveRecorder
                     return results;
                 }
                 else
-                if (JsonObject[Key].GetType() == typeof(Dictionary<string, object>) && step < TolStep - 1)
+                if (JsonObject[Key]?.GetType() == typeof(Dictionary<string, object>) && step < TolStep - 1)
                 {
                     Dictionary<string, object> di = (Dictionary<string, object>)JsonObject[Key];
                     return GetJsonValueByKey(di, Keys, step + 1);
@@ -227,6 +231,67 @@ namespace AutoLiveRecorder
             else
             {
                 return "";
+            }
+        }
+
+        /// <summary>
+        /// 读取任务列表
+        /// </summary>
+        public static void LoadTasks()
+        {
+            if (File.Exists("tasks.txt"))
+            {
+                FileStream fs = new FileStream(Properties.Settings.Default.SavePath + "\tasks.json", FileMode.Open);
+                StreamReader reader = new StreamReader(fs);
+                string json = reader.ReadToEnd();
+                fs.Close();
+
+                ArrayList al = (ArrayList)GetJsonValueByKey(json, "tasks");
+                foreach (Dictionary<string, object> i in al)
+                {
+                    Cls_WorkListItem c = new Cls_WorkListItem();
+
+                    c.Frequency = GetJsonValueByKey(i, "Frequency")?.ToString();
+                    c.Host = GetJsonValueByKey(i, "Host").ToString();
+                    c.IsRecordDanmu = (bool)GetJsonValueByKey(i, "IsRecordDanmu");
+                    c.IsRepeat = (bool)GetJsonValueByKey(i, "IsRepeat");
+                    c.IsSupportDanmu = (bool)GetJsonValueByKey(i, "IsSupportDanmu");
+                    c.IsTranslateAfterCompleted = (bool)GetJsonValueByKey(i, "IsTranslateAfterCompleted");
+                    c.Platform = (Cls_WorkListItem.PlatformType)GetJsonValueByKey(i, "Platform");
+                    c.RoomStatus = (int)GetJsonValueByKey(i, "RoomStatus");
+                    c.RoomTitle = GetJsonValueByKey(i, "RoomTitle").ToString();
+                    c.Roomid = GetJsonValueByKey(i, "Roomid").ToString();
+                    c.StartMode = (Cls_WorkListItem.StartModeType)GetJsonValueByKey(i, "StartMode");
+                    c.StartTime = DateTime.Parse(GetJsonValueByKey(i, "StartTime")?.ToString());
+                    c.StartTime = c.StartTime.AddHours(8);
+                    c.Status = (Cls_WorkListItem.StatusCode)GetJsonValueByKey(i, "Status");
+                    c.URL = GetJsonValueByKey(i, "URL").ToString();
+
+                    c.SettingFinished();
+
+                    TaskList.Add(c);
+                    ((MainWindow)Application.Current.MainWindow).WorkList.AddTask(c);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 保存任务列表
+        /// </summary>
+        public static void SaveTasks()
+        {
+            DataContractJsonSerializer jser = new DataContractJsonSerializer(TaskList.GetType());
+            using (MemoryStream ms = new MemoryStream())
+            {
+                jser.WriteObject(ms, TaskList);
+                StringBuilder sb = new StringBuilder();
+                sb.Append(Encoding.UTF8.GetString(ms.ToArray()));
+                string json = sb.ToString();
+                json = "{\"tasks\":" + json + "}";
+                byte[] bjson = Encoding.UTF8.GetBytes(json);
+                FileStream fs = File.Open(Properties.Settings.Default.SavePath + "\tasks.json", FileMode.OpenOrCreate);
+                fs.Write(bjson, 0, bjson.Length);
+                fs.Close();
             }
         }
 

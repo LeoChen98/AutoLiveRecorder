@@ -318,6 +318,9 @@ namespace AutoLiveRecorder
         {
             //初始化托盘图标
             NotifyIcon.NotifyIcon_Init();
+
+            //读取任务列表
+            Bas.LoadTasks();
         }
 
         #endregion Private Methods

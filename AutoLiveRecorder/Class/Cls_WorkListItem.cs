@@ -452,7 +452,17 @@ namespace AutoLiveRecorder
         /// </summary>
         public DateTime StartTime
         {
-            get { return _StartTime; }
+            get
+            {
+                if (_StartTime == new DateTime())
+                {
+                    return new DateTime(1970, 1, 1, 8, 0, 0);
+                }
+                else
+                {
+                    return _StartTime;
+                }
+            }
             set
             {
                 _StartTime = value;
@@ -667,7 +677,7 @@ namespace AutoLiveRecorder
                 }
             }
             tmpFileList.Clear();
-            if (StartMode == StartModeType.WhenStart || (StartMode == StartModeType.WhenStart && IsRepeat) || (StartMode == StartModeType.WhenTime && !Frequency.Contains("仅一次")))
+            if ((StartMode == StartModeType.WhenStart && IsRepeat) || (StartMode == StartModeType.WhenTime && !Frequency.Contains("仅一次")))
                 Status = StatusCode.Waiting;
             else
                 Status = StatusCode.Finished;
