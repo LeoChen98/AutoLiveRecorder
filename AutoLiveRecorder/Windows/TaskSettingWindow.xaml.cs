@@ -119,7 +119,9 @@ namespace AutoLiveRecorder
                         Item.StartMode = Cls_WorkListItem.StartModeType.Manuel;
                     else if ((bool)RB_StartWhenTime.IsChecked)
                         Item.StartMode = Cls_WorkListItem.StartModeType.WhenTime;
+
                     Item.IsRepeat = (bool)CB_IsRepeat.IsChecked;
+                    Item.IsTranslateAfterCompleted = (bool)CB_IsTranslateAfterCompleted.IsChecked;
 
                     if (IsNew)
                     {
@@ -273,6 +275,8 @@ namespace AutoLiveRecorder
                 default:
                     break;
             }
+            CB_IsTranslateAfterCompleted.IsChecked = Item.IsTranslateAfterCompleted;
+            CB_IsRepeat.IsChecked = Item.IsRepeat;
         }
 
         #endregion Private Methods

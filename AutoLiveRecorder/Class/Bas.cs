@@ -235,6 +235,23 @@ namespace AutoLiveRecorder
         }
 
         /// <summary>
+        /// 获得mp4文件名
+        /// </summary>
+        /// <param name="fileName">flv文件名</param>
+        /// <returns></returns>
+        public static string GetMP4FileName(string fileName)
+        {
+            string[] ss = Regex.Split(fileName, "\\.");
+            string s = "";
+            for (int i = 0; i < ss.Length - 1; i++)
+            {
+                s += ss[i] + ".";
+            }
+            s += "mp4";
+            return s;
+        }
+
+        /// <summary>
         /// 读取任务列表
         /// </summary>
         public static void LoadTasks()
@@ -249,20 +266,21 @@ namespace AutoLiveRecorder
                 ArrayList al = (ArrayList)GetJsonValueByKey(json, "tasks");
                 foreach (Dictionary<string, object> i in al)
                 {
-                    Cls_WorkListItem c = new Cls_WorkListItem();
-
-                    c.Frequency = GetJsonValueByKey(i, "Frequency")?.ToString();
-                    c.Host = GetJsonValueByKey(i, "Host").ToString();
-                    c.IsRecordDanmu = (bool)GetJsonValueByKey(i, "IsRecordDanmu");
-                    c.IsRepeat = (bool)GetJsonValueByKey(i, "IsRepeat");
-                    c.IsSupportDanmu = (bool)GetJsonValueByKey(i, "IsSupportDanmu");
-                    c.IsTranslateAfterCompleted = (bool)GetJsonValueByKey(i, "IsTranslateAfterCompleted");
-                    c.Platform = (Cls_WorkListItem.PlatformType)GetJsonValueByKey(i, "Platform");
-                    c.RoomStatus = (int)GetJsonValueByKey(i, "RoomStatus");
-                    c.RoomTitle = GetJsonValueByKey(i, "RoomTitle").ToString();
-                    c.Roomid = GetJsonValueByKey(i, "Roomid").ToString();
-                    c.StartMode = (Cls_WorkListItem.StartModeType)GetJsonValueByKey(i, "StartMode");
-                    c.StartTime = DateTime.Parse(GetJsonValueByKey(i, "StartTime")?.ToString());
+                    Cls_WorkListItem c = new Cls_WorkListItem
+                    {
+                        Frequency = GetJsonValueByKey(i, "Frequency")?.ToString(),
+                        Host = GetJsonValueByKey(i, "Host").ToString(),
+                        IsRecordDanmu = (bool)GetJsonValueByKey(i, "IsRecordDanmu"),
+                        IsRepeat = (bool)GetJsonValueByKey(i, "IsRepeat"),
+                        IsSupportDanmu = (bool)GetJsonValueByKey(i, "IsSupportDanmu"),
+                        IsTranslateAfterCompleted = (bool)GetJsonValueByKey(i, "IsTranslateAfterCompleted"),
+                        Platform = (Cls_WorkListItem.PlatformType)GetJsonValueByKey(i, "Platform"),
+                        RoomStatus = (int)GetJsonValueByKey(i, "RoomStatus"),
+                        RoomTitle = GetJsonValueByKey(i, "RoomTitle").ToString(),
+                        Roomid = GetJsonValueByKey(i, "Roomid").ToString(),
+                        StartMode = (Cls_WorkListItem.StartModeType)GetJsonValueByKey(i, "StartMode"),
+                        StartTime = DateTime.Parse(GetJsonValueByKey(i, "StartTime")?.ToString())
+                    };
                     c.StartTime = c.StartTime.AddHours(8);
                     c.Status = (Cls_WorkListItem.StatusCode)GetJsonValueByKey(i, "Status");
                     c.URL = GetJsonValueByKey(i, "URL").ToString();
@@ -289,7 +307,7 @@ namespace AutoLiveRecorder
                 string json = sb.ToString();
                 json = "{\"tasks\":" + json + "}";
                 byte[] bjson = Encoding.UTF8.GetBytes(json);
-                FileStream fs = File.Open(Properties.Settings.Default.SavePath + "\\tasks.json", FileMode.OpenOrCreate);
+                FileStream fs = File.Open(Properties.Settings.Default.SavePath + "\\tasks.json", FileMode.Create);
                 fs.Write(bjson, 0, bjson.Length);
                 fs.Close();
             }

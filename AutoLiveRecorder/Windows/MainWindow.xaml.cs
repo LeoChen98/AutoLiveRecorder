@@ -25,6 +25,7 @@ namespace AutoLiveRecorder
             InitializeComponent();
 
             Application.Current.MainWindow = this;
+            System.Net.ServicePointManager.DefaultConnectionLimit = 1024;
         }
 
         #endregion Public Constructors

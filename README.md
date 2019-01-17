@@ -18,9 +18,18 @@
 
 
 ## 下载地址
-[![Downloads](https://img.shields.io/badge/%E4%B8%8B%E8%BD%BD%E8%BD%AF%E4%BB%B6@2.0.3.20-485K-brightgreen.svg)](https://github.com/LeoChen98/AutoLiveRecorder/releases/download/2.0.3.20/AutoLiveRecorder.exe)
+[![Downloads](https://img.shields.io/badge/%E4%B8%8B%E8%BD%BD%E8%BD%AF%E4%BB%B6@2.0.4.21-486k-brightgreen.svg)](https://github.com/LeoChen98/AutoLiveRecorder/releases/download/2.0.4.21/AutoLiveRecorder.exe)
 [![PassedDownloads](https://img.shields.io/badge/%E8%BF%87%E5%BE%80%E7%89%88%E6%9C%AC-release-blue.svg)](https://github.com/LeoChen98/AutoLiveRecorder/releases)  
 
 ## 开发计划
 * 即将加入命令行启动功能，以便使用计划任务的方式启动。
 * 将开发服务器拓展插件。
+
+## 开放源代码许可
+### ffmpeg v4.0
+<http://ffmpeg.org/>
+
+Copyright (c) 2000-2018 the FFmpeg developers
+
+Licensed under LGPL v2.1 or later
+
