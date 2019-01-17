@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Threading;
@@ -49,7 +50,6 @@ namespace AutoLiveRecorder
         /// </summary>
         private Thread Recorder;
 
-        private Stream stream;
         private List<string> tmpFileList = new List<string>();
 
         private FileStream writer;
@@ -677,6 +677,11 @@ namespace AutoLiveRecorder
                 }
             }
             tmpFileList.Clear();
+            if (IsTranslateAfterCompleted)
+            {
+                Status = StatusCode.Translating;
+                Transcode();
+            }
             if ((StartMode == StartModeType.WhenStart && IsRepeat) || (StartMode == StartModeType.WhenTime && !Frequency.Contains("仅一次")))
                 Status = StatusCode.Waiting;
             else
@@ -688,11 +693,12 @@ namespace AutoLiveRecorder
         /// </summary>
         private void DoRecord()
         {
+            bool isFinished = false;
             try
             {
                 client = new WebClient();
 
-                stream = client.OpenRead(new Uri(VideoUrl[0]));
+                Stream stream = client.OpenRead(new Uri(VideoUrl[0]));
 
                 if (!Directory.Exists(Properties.Settings.Default.SavePath)) Directory.CreateDirectory(Properties.Settings.Default.SavePath);
                 FileName = Bas.GetFreeFileName(PlatformString + "-" + Roomid + "-" + DateTime.Now.Year + "-" + DateTime.Now.Month + "-" + DateTime.Now.Day + " " + DateTime.Now.Hour + "-" + DateTime.Now.Minute + "-" + DateTime.Now.Second, "flv", Properties.Settings.Default.SavePath);
@@ -700,11 +706,27 @@ namespace AutoLiveRecorder
                 tmpFileList.Add(tmpFileName);
                 writer = new FileStream(tmpFileName, FileMode.Create);
 
+                long tmpFileLength = 0;
                 byte[] mbyte = new byte[1024];
                 int readL = stream.Read(mbyte, 0, 1024);
                 while (readL != 0 && !IsRecorderAbortRequested)
                 {
                     writer.Write(mbyte, 0, readL);//写文件
+                    tmpFileLength += readL;
+                    //文件分片
+                    if (tmpFileLength >= 1073741824)
+                    {
+                        //关闭流
+                        stream = null;
+                        //关闭连接
+                        client.Dispose();
+                        //关闭文件
+                        writer.Close();
+                        //新建分片
+                        DoRecord(FileName);
+                        isFinished = true;
+                        return;
+                    }
                     readL = stream.Read(mbyte, 0, 1024);//读流
                 }
                 if (IsLiving() && !IsRecorderAbortRequested) DoRecord(FileName);
@@ -723,12 +745,15 @@ namespace AutoLiveRecorder
             }
             finally
             {
-                //关闭连接
-                client.Dispose();
-                //关闭文件
-                writer.Close();
-                //整理文件
-                ArrangeFile();
+                if (!isFinished)
+                {
+                    //关闭连接
+                    client.Dispose();
+                    //关闭文件
+                    writer.Close();
+                    //整理文件
+                    ArrangeFile();
+                }
             }
         }
 
@@ -738,21 +763,36 @@ namespace AutoLiveRecorder
         /// <param name="FileName">文件路径</param>
         private void DoRecord(string FileName)
         {
+            bool isFinished = false;
             try
             {
                 client = new WebClient();
 
-                stream = client.OpenRead(new Uri(VideoUrl[0]));
+                Stream stream = client.OpenRead(new Uri(VideoUrl[0]));
 
                 string tmpFileName = Bas.GetFreeTmpFileName(FileName);
                 tmpFileList.Add(tmpFileName);
                 writer = new FileStream(tmpFileName, FileMode.Create);
 
+                long tmpFileLength = 0;
                 byte[] mbyte = new byte[1024];
                 int readL = stream.Read(mbyte, 0, 1024);
                 while (readL != 0 && !IsRecorderAbortRequested)
                 {
                     writer.Write(mbyte, 0, readL);//写文件
+                    tmpFileLength += readL;
+                    //文件分片
+                    if (tmpFileLength >= 1073741824)
+                    {
+                        //关闭连接
+                        client.Dispose();
+                        //关闭文件
+                        writer.Close();
+                        //新建分片
+                        DoRecord(FileName);
+                        isFinished = true;
+                        return;
+                    }
                     readL = stream.Read(mbyte, 0, 1024);//读流
                 }
                 if (IsLiving() && !IsRecorderAbortRequested) DoRecord(FileName);
@@ -771,12 +811,15 @@ namespace AutoLiveRecorder
             }
             finally
             {
-                //关闭连接
-                client.Dispose();
-                //关闭文件
-                writer.Close();
-                //整理文件
-                ArrangeFile();
+                if (!isFinished)
+                {
+                    //关闭连接
+                    client.Dispose();
+                    //关闭文件
+                    writer.Close();
+                    //整理文件
+                    ArrangeFile();
+                }
             }
         }
 
@@ -892,6 +935,33 @@ namespace AutoLiveRecorder
                     default:
                         break;
                 }
+            }
+        }
+
+        /// <summary>
+        /// 转码
+        /// </summary>
+        private void Transcode()
+        {
+        a: if (File.Exists(Properties.Settings.Default.SavePath + "\\ffmpeg.exe"))
+            {
+                Process p = new Process()
+                {
+                    StartInfo = new ProcessStartInfo()
+                    {
+                        FileName = Properties.Settings.Default.SavePath + "\\ffmpeg.exe",
+                        CreateNoWindow = true,
+                        WindowStyle = ProcessWindowStyle.Hidden,
+                        Arguments = "-i \"" + FileName + "\" -vcodec copy -acodec copy \"" + Bas.GetMP4FileName(FileName) + "\""
+                    }
+                };
+                p.Start();
+            }
+            else
+            {
+                WebClient c = new WebClient();
+                c.DownloadFile("http://update.zhangbudademao.com/112/ffmpeg.exe", Properties.Settings.Default.SavePath + "\\ffmpeg.exe");
+                goto a;
             }
         }
 

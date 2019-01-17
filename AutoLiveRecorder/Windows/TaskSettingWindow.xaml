@@ -36,7 +36,7 @@
                         </Grid>
                     </Border>
                     <CheckBox x:Name="CB_IsRecordDanmu" HorizontalAlignment="Left" Height="17.2" VerticalAlignment="Top" Width="110" Margin="10,111.8,0,0" IsChecked="True" Visibility="Hidden">录制弹幕</CheckBox>
-                    <CheckBox x:Name="CB_IsTranslateAfterCompleted" HorizontalAlignment="Left" Height="17.2" VerticalAlignment="Top" Width="110" Margin="10,134,0,0" IsChecked="True" Visibility="Hidden">完成后自动转码</CheckBox>
+                    <CheckBox x:Name="CB_IsTranslateAfterCompleted" HorizontalAlignment="Left" Height="17.2" VerticalAlignment="Top" Width="270" Margin="10,134,0,0" IsChecked="True">完成后自动转码(启用将自动下载ffmpeg.exe）</CheckBox>
                     <CheckBox x:Name="CB_IsRepeat" Content="重复任务" HorizontalAlignment="Left" Height="15" Margin="115,30,0,0" VerticalAlignment="Top" Width="85.64" Visibility="Hidden" />
                 </Grid>
                 <Label x:Name="Btn_Comfirm" HorizontalAlignment="Right" Height="34.6" VerticalAlignment="Bottom" Width="68.8" Margin="0,0,174.4,24.8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="#66FFFFFF" MouseUp="Btn_Comfirm_MouseUp" MouseEnter="Btn_Comfirm_MouseEnter" MouseLeave="Btn_Comfirm_MouseLeave">确定</Label>
