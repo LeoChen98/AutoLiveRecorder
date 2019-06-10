@@ -10,6 +10,15 @@ namespace AutoLiveRecorder
 {
     internal class Update
     {
+        #region Private Fields
+
+        /// <summary>
+        /// 新文件md5
+        /// </summary>
+        private static string md5;
+
+        #endregion Private Fields
+
         #region Public Methods
 
         /// <summary>
@@ -22,7 +31,6 @@ namespace AutoLiveRecorder
             {
                 ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
                 ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072;
-                ServicePointManager.DefaultConnectionLimit = 512;
 
                 HttpWebRequest req = (HttpWebRequest)WebRequest.Create("https://github.com/LeoChen98/AutoLiveRecorder/releases/latest");
 
@@ -48,7 +56,15 @@ namespace AutoLiveRecorder
                         client.DownloadFileAsync(new Uri("https://github.com/LeoChen98/AutoLiveRecorder/releases/download/" + newver + "/AutoLiveRecorder.exe"), Application.StartupPath + "\\update.tmp");
                         client.DownloadFileCompleted += new System.ComponentModel.AsyncCompletedEventHandler((o, e) =>
                         {
-                            DoUpdate();
+                            if (GetFileMD5(Application.StartupPath + "\\update.tmp") == GetMD5())
+                            {
+                                DoUpdate();
+                            }
+                            else
+                            {
+                                MessageBox.Show("下载文件错误，将使用浏览器下载更新，请在文件下载完成后自行覆盖程序文件。");
+                                Process.Start("https://github.com/LeoChen98/AutoLiveRecorder/releases/download/" + newver + "/AutoLiveRecorder.exe");
+                            }
                         }
                         );
                     }
@@ -131,6 +147,42 @@ namespace AutoLiveRecorder
             }
 
             return str;
+        }
+
+        /// <summary>
+        /// 获取文件md5
+        /// </summary>
+        /// <param name="FileName">文件地址</param>
+        /// <returns>md5</returns>
+        private static string GetFileMD5(string FileName)
+        {
+            try
+            {
+                FileStream file = new FileStream(FileName, FileMode.Open);
+                System.Security.Cryptography.MD5 md5 = new System.Security.Cryptography.MD5CryptoServiceProvider();
+                byte[] retVal = md5.ComputeHash(file);
+                file.Close();
+
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < retVal.Length; i++)
+                {
+                    sb.Append(retVal[i].ToString("x2"));
+                }
+                return sb.ToString();
+            }
+            catch
+            {
+                return "";
+            }
+        }
+
+        /// <summary>
+        /// 获取文件正确的md5
+        /// </summary>
+        /// <returns>md5</returns>
+        private static string GetMD5()
+        {
+            return Bas.GetBody("https://leochen98.github.io/AutoLiveRecorder/md5.txt");
         }
 
         #endregion Private Methods
