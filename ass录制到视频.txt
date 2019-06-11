@@ -1,0 +1,1 @@
+ffmpeg -i C41.mp4 -i C41.ass -vf ass=C41.ass o.mp4
